@@ -58,7 +58,7 @@ def clean_nan(nparray):
 #       larger values makes wider threshold values for the hysteresis edge detection
 #   upper limit is usually 255, but we need it larger, as our float32 pixel values can be larger
 
-def auto_canny(image, sigma=0.33):
+def auto_canny(image, sigma=0.66):
 
     # compute the median of the single channel pixel intensities
     v = np.nanmedian(image)
@@ -100,11 +100,16 @@ hist = cv2.calcHist([image], [0], None, [361], [0, 361])
 
 blurred = cv2.GaussianBlur(imageclean, (5, 5), 0).astype('uint8')
 
-edged = auto_canny(blurred)
+dirty_blur = cv2.GaussianBlur(image, (5, 5), 0).astype('uint8')
+
+dirty_edged = auto_canny(dirty_blur)
+
+blur_edged = auto_canny(blurred)
 
 cv2.imshow('nanofilm read', image)
 cv2.imshow('blurred', blurred)
-cv2.imshow('edged', edged)
+cv2.imshow('blurred edged', blur_edged)
+cv2.imshow('dirty edged', dirty_edged)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
