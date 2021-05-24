@@ -14,24 +14,29 @@ path = './data_demo/Flakesearch_Graphene_20180214175340935_087.png'
 
 im_cv = cv2.imread(path)
 
-im_cv_gray = cv2.cvtColor(im_cv, cv2.COLOR_BGR2GRAY)
-
 blurred = cv2.GaussianBlur(im_cv, (5, 5), 0)
 
 cv2.imshow('cv read', im_cv)
-#cv2.imshow('cv gray', im_cv_gray)
 cv2.imshow('blurred', blurred)
 cv2.waitKey(0)
 
 
-# compute a "wide", "mid-range", and "tight" threshold for the edges
-# using the Canny edge detector
-wide = cv2.Canny(blurred, 10, 200)
-mid = cv2.Canny(blurred, 30, 150)
-tight = cv2.Canny(blurred, 240, 250)
+def auto_canny(image, sigma=0.33):
+    # compute the median of the single channel pixel intensities
+    v = np.median(image)
 
-# show the output Canny edge maps
-cv2.imshow("Wide Edge Map", wide)
-cv2.imshow("Mid Edge Map", mid)
-cv2.imshow("Tight Edge Map", tight)
+    # apply automatic Canny edge detection using the computed median
+    lower = int(max(0, (1.0 - sigma) * v))
+    upper = int(min(255, (1.0 + sigma) * v))
+    edged = cv2.Canny(image, lower, upper)
+
+    # return the edged image
+    return edged
+
+
+auto = auto_canny(blurred)
+
+# show the images
+cv2.imshow("Original", im_cv)
+cv2.imshow("Edges", auto)
 cv2.waitKey(0)

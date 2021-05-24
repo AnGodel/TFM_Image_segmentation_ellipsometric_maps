@@ -4,35 +4,107 @@ Created on Thu May 20 14:25:52 2021
 
 @author: ago
 """
+# IMPORTS
 
 import numpy as np
 from nanofilm.ndimage import imread
+import numpy.ma as ma
 import cv2
 
+# DEFINE IMAGE PATH -- WILL BE REWORKED USING ARGPARSE
+    # WILL NEED ADAPTION TO WORK WITH ALL IMAGES IN ONE FOLDER
 path = './data_demo/Flakesearch_Graphene_20180214175340935_087.png'
 
-im_nano = imread(path)
+# FUNCTIONS USED IN THE SCRIPT
 
-#counting the number of nan values inside the image
+def printing_img_details(image):
 
-nanpixels = np.count_nonzero(np.isnan(im_nano))
-fullpixels = np.count_nonzero(~np.isnan(im_nano))
-print('the map has {} empty pixels and {} not empty pixels'.format(nanpixels,fullpixels))
+    print('image name: {}'.format(' '))
+    print('type: {}'.format(type(image)))
+    print('shape: {}'.format(image.shape))
+    print('data type: {}'.format(image.dtype))
+    print('width: {}'.format(image.shape[1]))
+    print('height: {}'.format(image.shape[0]))
+    fullpixels = np.count_nonzero(~np.isnan(image))
+    nanpixels = np.count_nonzero(np.isnan(image))
+    print('image size: {} pixels'.format(image.size))
+    print('empty pixels: {}'.format(nanpixels))
+    print('full pixels: {}'.format(fullpixels))
+    print('\n')
 
-#finding max and min pixel value
-pixelmax = np.nanmax(im_nano)
-pixelmin = np.nanmin(im_nano)
 
-#mask to hide all nan values
-nanmask = (~np.isnan(im_nano)) 
-#esto no funciona al aplicar la mascara al histograma. 
-#Pero habrá que quitar los nan de alguna manera porque van a estorbar en otras operaciones seguro
+def clean_nan(nparray):
+    '''
 
-hist = cv2.calcHist([im_nano], [0], nanmask, [360], [pixelmin, pixelmax])
+    Parameters
+    ----------
+    nparray : an image transformed into numpy array.
 
-blurred = cv2.GaussianBlur(im_nano, (5, 5), 0)
+    Returns
+    -------
+    nparray : same numpy array, where tne NaN pixels have been replaced by the mean value of all other pixels.
+        This behavior can be changed. For example: .mean(axis=0) will do the mean of only the column where the NaN pixel is located.
 
-cv2.imshow('nanofilm read', im_nano)
+    '''
+
+    nparray = np.where(np.isnan(nparray), 
+                       ma.array(nparray, 
+                                mask=np.isnan(nparray)).mean(axis=0), 
+                       nparray)
+    return nparray
+
+# function for automatic Canny edge detection
+#   sigma is the only adjustable parameter
+#       larger values makes wider threshold values for the hysteresis edge detection
+#   upper limit is usually 255, but we need it larger, as our float32 pixel values can be larger
+
+def auto_canny(image, sigma=0.33):
+
+    # compute the median of the single channel pixel intensities
+    v = np.nanmedian(image)
+
+    # apply automatic Canny edge detection using the computed median
+    lower = int(max(0, (1.0 - sigma) * v))
+    upper = int(min(360, (1.0 + sigma) * v))
+    edged = cv2.Canny(image, lower, upper)
+
+    # return the edged image
+    return edged
+
+image = imread(path)
+
+printing_img_details(image)
+
+
+# finding max and min pixel value
+pixelmax = np.nanmax(image)
+pixelmin = np.nanmin(image)
+overalmean = np.nanmean(image)
+overalmedian = np.nanmedian(image)
+
+# cleaning nan from image
+
+imageclean = clean_nan(image)
+printing_img_details(imageclean)
+
+# histogram needs to be worked on #######################################################
+
+hist = cv2.calcHist([image], [0], None, [361], [0, 361])
+
+######################################
+
+# applying a gaussian blur to reduce low-level noise
+#       # .astype uint8 is the only way for imshow to display the shades of gray in the image
+            # needs further investigation
+# will apply the blur to the image already clean of nans
+
+blurred = cv2.GaussianBlur(imageclean, (5, 5), 0).astype('uint8')
+
+edged = auto_canny(blurred)
+
+cv2.imshow('nanofilm read', image)
 cv2.imshow('blurred', blurred)
+cv2.imshow('edged', edged)
 cv2.waitKey(0)
+cv2.destroyAllWindows()
 
