@@ -14,6 +14,7 @@ import cv2
 # DEFINE IMAGE PATH -- WILL BE REWORKED USING ARGPARSE
     # WILL NEED ADAPTION TO WORK WITH ALL IMAGES IN ONE FOLDER
 path = './data_demo/Flakesearch_Graphene_20180214175340935_087.png'
+single_test_path = './data_demo/RCEvase/RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Delta_0001.png'
 
 # FUNCTIONS USED IN THE SCRIPT
 
@@ -58,20 +59,20 @@ def clean_nan(nparray):
 #       larger values makes wider threshold values for the hysteresis edge detection
 #   upper limit is usually 255, but we need it larger, as our float32 pixel values can be larger
 
-def auto_canny(image, sigma=0.66):
+def auto_canny(image, sigma=0.8):
 
     # compute the median of the single channel pixel intensities
-    v = np.nanmedian(image)
+    v = np.nanmean(image)
 
     # apply automatic Canny edge detection using the computed median
     lower = int(max(0, (1.0 - sigma) * v))
-    upper = int(min(360, (1.0 + sigma) * v))
+    upper = int(min(255, (1.0 + sigma) * v))
     edged = cv2.Canny(image, lower, upper)
 
     # return the edged image
     return edged
 
-image = imread(path)
+image = imread(single_test_path).T
 
 printing_img_details(image)
 
