@@ -10,6 +10,8 @@ import numpy as np
 import numpy.ma as ma
 import matplotlib.pyplot as plt
 from skimage.exposure import histogram
+import skimage
+from skimage.feature import canny
 
 path = './data_demo/Flakesearch_Graphene_20180214175340935_087.png'
 single_test_path = './data_demo/RCEvase/RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Delta_0001.png'
@@ -54,3 +56,7 @@ correctedHisto, correctedBins = np.histogram(graphene, bins=BinsToCalcate)
 
 
 plt.plot(correctedBins[1:], correctedHisto)
+
+edges = canny(graphene)
+
+plt.imshow(edges)
