@@ -30,7 +30,7 @@ graphene = map_load_cleannans(path)
 
 hist_graphene, hist_graphene_centers = histogram(graphene)
 
-plt.plot(hist_graphene)
+#plt.plot(hist_graphene)
 # plt.imshow(graphene)
 
 '''
@@ -55,7 +55,7 @@ BinsToCalcate = np.arange(mincontrast, maxcontrast, 0.01)
 correctedHisto, correctedBins = np.histogram(graphene, bins=BinsToCalcate)
 
 
-plt.plot(correctedBins[1:], correctedHisto)
+#plt.plot(correctedBins[1:], correctedHisto)
 
 edges = canny(graphene)
 
