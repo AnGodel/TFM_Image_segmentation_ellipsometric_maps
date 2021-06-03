@@ -87,7 +87,7 @@ graphene = map_load_cleannans(graphene_path)
 raw = imread(RCE_delta_path)
 
 
-def map_load_astroclean (image, kernel = Gaussian2DKernel(x_stddev=1),  ):
+def map_load_astroclean (image, kernel = Gaussian2DKernel(x_stddev=1)):
     #9x9 kernel for smoothing
     image = imread(image).T
     
