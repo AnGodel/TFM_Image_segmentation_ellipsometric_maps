@@ -61,7 +61,7 @@ def loadmap_nansAsMean(image):
                        image)
     return imageclean
 
-def plot_image(image, Title='title'):
+def plot_image_withCbar(image, Title='title'):
     
     maxcontrast = np.max(image) 
     mincontrast = np.min(image) #this will work only for clean images with no nans
@@ -72,8 +72,8 @@ def plot_image(image, Title='title'):
     arrContrast = ax.imshow(image, 
                         vmin = mincontrast,
                         vmax = maxcontrast,
-                        cmap = 'Blues')
-    cbar = plt.colorbar(arrContrast)
+                        cmap = 'viridis')
+    cbar = plt.colorbar(arrContrast, shrink=0.5)
     
     return cbar
 
