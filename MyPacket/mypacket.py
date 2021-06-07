@@ -10,6 +10,7 @@ import numpy.ma as ma
 from nanofilm.ndimage import imread
 import matplotlib.pyplot as plt
 from astropy.convolution import Gaussian2DKernel, interpolate_replace_nans
+from sklearn.cluster import KMeans
 
 def printImageData(image_path):
     #function to quickly print relevant image details
@@ -112,18 +113,27 @@ def loadmap (path):
     
     return image
 
-def printImageData(image):
-    #function to quickly print relevant image details
+def clusterKMeans_singlemap (image, n_clusters=5):
+    '''
 
-    print('image name: {}'.format(' '))
-    print('type: {}'.format(type(image)))
-    print('shape: {}'.format(image.shape))
-    print('data type: {}'.format(image.dtype))
-    print('width: {}'.format(image.shape[1]))
-    print('height: {}'.format(image.shape[0]))
-    fullpixels = np.count_nonzero(~np.isnan(image))
-    nanpixels = np.count_nonzero(np.isnan(image))
-    print('image size: {} pixels'.format(image.size))
-    print('empty pixels: {}'.format(nanpixels))
-    print('full pixels: {}'.format(fullpixels))
-    print('\n')
+    Parameters
+    ----------
+    image : map loaded as numpy.ndarray, with shape (rows, cols)
+        Must be already clean of NaNs.
+    n_clusters : int, optional
+        DESCRIPTION. The default is 5. Tuneable to adjust to a reasonable number of clusters in the map
+
+    Returns
+    -------
+    Clusterized map, ready to be plotted with plt.imshow() or plot_image_withCbar from this packet.
+
+    '''
+    imageReshaped = image.reshape(image.shape[0]*image.shape[1], 1)
+    #A single map is already a 2D array, but as it has only one channel (similar to a grayscale image)
+    #It needs to be reshaped to be a column, with the 1 as second parameter of the reshape.
+    
+    kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit(imageReshaped)
+    imageSegmented = kmeans.cluster_centers_[kmeans.labels_]
+    segmentedtoshow = imageSegmented.reshape(image.shape[0], image.shape[1])
+    
+    return segmentedtoshow

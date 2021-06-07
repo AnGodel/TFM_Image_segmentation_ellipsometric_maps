@@ -11,4 +11,5 @@
    - apply canny (or other method) to detect edges in segmented image
    - ~~try also other example maps~~
    - explore how to get the metrics for the different number of clusters in the K-Means algorithm
-   - implement function to do the clustering directyly in MyPacket
+   - ~~implement function to do the clustering directyly in MyPacket~~
+
