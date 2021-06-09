@@ -10,6 +10,6 @@
    - ~~try segmentation by MeanShift~~ the result in the example looks awesome, but it can't be applied to our maps, since the imput image must be 8-bit 3 channel
    - apply canny (or other method) to detect edges in segmented image
    - ~~try also other example maps~~
-   - explore how to get the metrics for the different number of clusters in the K-Means algorithm
+   - ~~explore how to get the metrics for the different number of clusters in the K-Means algorithm~~ The yellowbrick library provides a nice and easy solution for implementing the elbow method. However, the results obtained should be taken with care. They are sometimes not reproducible, vary depending on the metics used (distortion or other) and the optimal k number found does not always match the optimal value of clusters found manually by try and error.
    - ~~implement function to do the clustering directyly in MyPacket~~
 
