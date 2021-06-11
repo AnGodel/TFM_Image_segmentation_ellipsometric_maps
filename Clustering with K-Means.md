@@ -1,7 +1,11 @@
 ## Disadvantages and challenges:
    - application to a set of maps with dimension (rows, columns, [number of maps]
+        - This has been tested. It works fine although it takes a few seconds to process. Tested with stack of three delta maps
    - application to a set of combined delta and psi maps
    - the number of initial clusters must be set manually. Maybe this can be used as tunable parameter in the future front-end
+        - initial number of clusters can be evaluated with yellowbrick visualizers
+        - it is slower than desirable and the results (estimated optimal number of clusters) are not reliable
+             - this can be probably improved by decreasing the max number of clusters for the estimation
    - loss of resolution on edges 
 
 ## To-Do:
