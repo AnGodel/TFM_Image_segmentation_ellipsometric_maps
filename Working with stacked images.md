@@ -13,8 +13,12 @@ The maps naming convention is different depending on the grabbing method:
 
 ## To-Do
 
-- try segmentation on a stack of delta and psi maps combined
-- try to improve the k estimation decreasing max number of clusters in the estimator
+- ~~try segmentation on a stack of delta and psi maps combined~~
+  - works just as fine as separating delta and psi maps manually
+  - execution time for a stack of 6 maps, including two metrics and k estimation with yellowbrick, is about 1 minute. 
+- ~~try to improve the k estimation decreasing max number of clusters in the estimator~~
+  - this does not have an effect with the distortion method (k still 4), but makes the Calinski_harabasz fail to find an optimum k. Keeping the max number of cluster at at least 10 give us the window of k 4 to 7
+  - the silhouette method fails when used with a stack of maps, or at least it is too slow to be used. Had to interrupt the python kernel with every try.
 - try segmentation after combining delta and psi maps in one using the math provided by MD
   - this might be interesting in order to reduce the computing time of the clustering but will have other disadvantages:
     - because of the math operation, the pixel of the combined map will have small values, in the range -1,1, which will likely need to be rescaled for proper plotting
