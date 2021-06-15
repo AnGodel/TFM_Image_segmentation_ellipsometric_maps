@@ -26,3 +26,8 @@ The maps naming convention is different depending on the grabbing method:
       - of this combined map will be useful only for finding the shapes and contours of the clusters and export a mask to be applied in the original maps to extract the numeric values
       - another option would by applying reversed math to get delta and psi values from the labels of the segmentation of C and S maps
 - test the computing time on small and large stacks for both the estimation with yellowbrick visualizers and the segmentation itself
+- try reading the ds.dat file to catch idexes of delta and psi maps? would this be necessary at all?
+  - probably it will work just fine considering that:
+    - in traditional nulling maps the maps are identified by only a rolling number which starts with 001, being the first delta always the 001 and the first psi always the 002. That means that in our map stacsk, the deltas will have even idexes (0, 2, 4...) and psis will have odd idexes (1,3,5...)
+    - in RCE the files will be identified with either "Delta" or "Psi" but there will be only one rolling number for each pair. We need to see how this will affect the script but for now we will focus in the traditional nulling maps.
+- 
