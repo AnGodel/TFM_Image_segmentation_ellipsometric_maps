@@ -56,7 +56,7 @@ class lambdaVarEllimaps:
         
         visualizer.show()
     
-    #Having the two estimator visualizer in the same function makes the second estimator fail
+    #Having the two estimator visualizers in the same function makes the second estimator fail, somehow
     
     def getEstimation2(self, k=(2,11), metric = 'calinski_harabasz'):
         
@@ -85,18 +85,18 @@ class lambdaVarEllimaps:
         
         idxDelta = idxDelta
         idxPsi = idxPsi
-        imDelta = np.dsplit(self.segmentedStack, self.dim3)[idxDelta]
-        imPsi = np.dsplit(self.segmentedStack, self.dim3)[idxPsi]
+        imDelta = np.dsplit(self.all_maps, self.dim3)[idxDelta]
+        imPsi = np.dsplit(self.all_maps, self.dim3)[idxPsi]
         
         fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,8))
         
         ax1.clear
-        ax1.imshow(imDelta, cmap = 'viridis')
+        ax1.imshow(imDelta, cmap = 'gray')
         ax1.set_title('Delta')
         ax1.grid(b=None)
         
         ax2.clear
-        ax2.imshow(imPsi, cmap = 'viridis')
+        ax2.imshow(imPsi, cmap = 'gray')
         ax2.grid(b=None)
         ax2.set_title('Psi')
     
