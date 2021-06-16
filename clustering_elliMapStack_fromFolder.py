@@ -88,14 +88,43 @@ class lambdaVarEllimaps:
         imDelta = np.dsplit(self.segmentedStack, self.dim3)[idxDelta]
         imPsi = np.dsplit(self.segmentedStack, self.dim3)[idxPsi]
         
-        fig, ax = plt.subplots(1,2, figsize=(15,8))
-        plt.subplot(121)
-        plt.imshow(imDelta, cmap = 'viridis')
-        plt.set_title('Delta')
-        plt.subplot(122)
-        plt.imshow(imPsi, cmap = 'viridis')
-        plt.set_title('Psi')
-        # ax1 = plt.imshow(imDelta, cmap = 'viridis')
-        # ax1.set_title('Delta')
-        # ax2 = plt.imshow(imPsi, cmap = 'viridis')
-        # ax2.set_title('Psi')
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,8))
+        
+        ax1.clear
+        ax1.imshow(imDelta, cmap = 'viridis')
+        ax1.set_title('Delta')
+        ax1.grid(b=None)
+        
+        ax2.clear
+        ax2.imshow(imPsi, cmap = 'viridis')
+        ax2.grid(b=None)
+        ax2.set_title('Psi')
+    
+    def plotSegmentedDeltaPsi(self, idxDelta = 0, idxPsi = 1):
+        
+        idxDelta = idxDelta
+        idxPsi = idxPsi
+        imDelta = np.dsplit(self.segmentedStack, self.dim3)[idxDelta]
+        imPsi = np.dsplit(self.segmentedStack, self.dim3)[idxPsi]
+        
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(18,10))
+        fig.tight_layout()
+        
+        ax1.clear
+        arrC1 = ax1.imshow(imDelta, cmap = 'viridis')
+        ax1.set_title('Delta')
+        ax1.grid(b=None)
+        fig.colorbar(arrC1, 
+                     ax=ax1, 
+                     shrink=0.5, 
+                     location='left',
+                     pad=0.045)
+        
+        ax2.clear
+        arrC2 = ax2.imshow(imPsi, cmap = 'viridis')
+        ax2.grid(b=None)
+        ax2.set_title('Psi')
+        fig.colorbar(arrC2, 
+                     ax=ax2, 
+                     shrink=0.5, 
+                     location='right')
