@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 
 class lambdaVarEllimaps:
     
-    def __init__(self, path = None):
+    def __init__(self, path = None, ):
         
         if path is None:
             raise ValueError('Please enter a valid path to folder containing maps from lambda variation measurement')
@@ -29,6 +29,10 @@ class lambdaVarEllimaps:
         self.dim1 = self.all_maps.shape[0]
         self.dim2 = self.all_maps.shape[1]
         self.dim3 = self.all_maps.shape[2]
+        
+        self.n_wl = np.arange(int(self.dim3/2))
+        self.Dindexes = [x for x in self.n_wl*2 if x%2 == 0]
+        self.Pindexes = [x+1 for x in self.n_wl*2 if x%2 == 0]
         
         self.stackReshaped = self.all_maps.reshape(self.dim1*self.dim2, self.dim3)
         self.segmentedStack = []
@@ -81,14 +85,14 @@ class lambdaVarEllimaps:
         
         return segmentedStack
     
-    def plotDeltaPsi(self, idxDelta = 0, idxPsi = 1):
+    def plotDeltaPsi(self, idxSelector = 0):
         
-        idxDelta = idxDelta
-        idxPsi = idxPsi
+        idxDelta = self.Dindexes[idxSelector]
+        idxPsi = self.Pindexes[idxSelector]
         imDelta = np.dsplit(self.all_maps, self.dim3)[idxDelta]
         imPsi = np.dsplit(self.all_maps, self.dim3)[idxPsi]
         
-        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,8))
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(18,10))
         
         ax1.clear
         ax1.imshow(imDelta, cmap = 'gray')
@@ -100,10 +104,10 @@ class lambdaVarEllimaps:
         ax2.grid(b=None)
         ax2.set_title('Psi')
     
-    def plotSegmentedDeltaPsi(self, idxDelta = 0, idxPsi = 1):
+    def plotSegmentedDeltaPsi(self, idxSelector = 0):
         
-        idxDelta = idxDelta
-        idxPsi = idxPsi
+        idxDelta = self.Dindexes[idxSelector]
+        idxPsi = self.Pindexes[idxSelector]
         imDelta = np.dsplit(self.segmentedStack, self.dim3)[idxDelta]
         imPsi = np.dsplit(self.segmentedStack, self.dim3)[idxPsi]
         
