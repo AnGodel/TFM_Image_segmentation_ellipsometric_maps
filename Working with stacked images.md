@@ -30,10 +30,12 @@ The maps naming convention is different depending on the grabbing method:
   - with sets of 22 and 63 maps it goes relatively fast. But the test with a set of 140 maps took about 10 minutes to just load all files into the class. 
   - further testing is required in order to check whether the required time icreases exponentially with the number of maps or the tested large dataset was containing larger images with more pixels.
     - if this is the case, it will worth a try the resizing of the images during preprocessing, as described [here](https://datascience.stackexchange.com/questions/42125/rgb-image-segmentation-using-clustering)
-- try reading the ds.dat file to catch indexes of delta and psi maps? would this be necessary at all?
-  - probably it will work just fine considering that:
-    - in traditional nulling maps the maps are identified by only a rolling number which starts with 001, being the first delta always the 001 and the first psi always the 002. That means that in our map stacsk, the deltas will have even idexes (0, 2, 4...) and psis will have odd idexes (1,3,5...)
-    - in RCE the files will be identified with either "Delta" or "Psi" but there will be only one rolling number for each pair. We need to see how this will affect the script but for now we will focus in the traditional nulling maps.
+- ~~try reading the ds.dat file to catch indexes of delta and psi maps? would this be necessary at all?~~
+  - ~~probably it will work just fine considering that:~~
+    - ~~in traditional nulling maps the maps are identified by only a rolling number which starts with 001, being the first delta always the 001 and the first psi always the 002. That means that in our map stacsk, the deltas will have even idexes (0, 2, 4...) and psis will have odd idexes (1,3,5...)~~
+    - ~~in RCE the files will be identified with either "Delta" or "Psi" but there will be only one rolling number for each pair. We need to see how this will affect the script but for now we will focus in the traditional nulling maps.~~
+  - Done. Now the class has an atribute which is an array the wavelengths of the experiment. 
+    - Error handling included: an error message will raise in case the number of wavelengths from the .dat file does not match the number of maps in the folder or in case there is more than one .dat file in the folder
 - extract the delta and psi vs. wavelength from the segmented stack. This will be one of the final goals of the project, since those data will be already "fittable" with Accurion's model software to extract more accurate thickness map (in a single map) than the current interpolation mode. 
 - apply canny edge detection or any other image method to extract the contours of the map segments.
   - the goal here is to somehow apply a "mask" in the original map stack before segmenting, so that an  area if interest can be "cropped" and selected for a traditional pixel by pixel fitting. 
