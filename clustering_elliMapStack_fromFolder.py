@@ -24,11 +24,10 @@ class lambdaVarEllimaps:
         else:
             self.path = path
             
-        self.getFiles()
+        self.getmapFiles()
         self.loadAllMaps()
-        self.dim1 = self.all_maps.shape[0]
-        self.dim2 = self.all_maps.shape[1]
-        self.dim3 = self.all_maps.shape[2]
+        self.getdatFile()
+        
         
         self.n_wl = np.arange(int(self.dim3/2))
         self.Dindexes = [x for x in self.n_wl*2 if x%2 == 0]
@@ -37,15 +36,37 @@ class lambdaVarEllimaps:
         self.stackReshaped = self.all_maps.reshape(self.dim1*self.dim2, self.dim3)
         self.segmentedStack = []
 
-    def getFiles(self):
+    def getmapFiles(self):
         
         self.all_files = glob.glob(self.path + '/*.png')
+    
+    def getdatFile(self):
+        
+        datFile = glob.glob(self.path + '/*.ds.dat')
+        if len(datFile) >= 2:
+            raise ValueError('The instatiated folder contains data from more than one experiment. The folder must contain only one .ds.dat file. Please clean the files in the folder and try again')
+        else:
+            self.datFile = str(datFile[0])
+    
+    def getWavelengths(self):
+        
+        WLarray = np.loadtxt(self.datFile,
+                             usecols=0,
+                             skiprows=2)
+        
+        if len(WLarray) != self.n_wl:
+            raise ValueError('The number of wavelength in the .dat file does not match the number of maps in the instantiated folder. The folder should have {} .png files, not more and not less'.format(self.n_wl))
+        else:
+            self.WLarray = WLarray
         
     
     def loadAllMaps(self):
         
         stack = list(map(at.loadmap_astroclean, self.all_files))
         self.all_maps = np.dstack(stack)
+        self.dim1 = self.all_maps.shape[0]
+        self.dim2 = self.all_maps.shape[1]
+        self.dim3 = self.all_maps.shape[2]
         
     
     def getEstimation(self, k=(2,11), metric = 'distortion'):
