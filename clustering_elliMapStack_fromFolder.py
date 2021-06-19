@@ -92,17 +92,27 @@ class lambdaVarEllimaps:
         imDelta = np.dsplit(self.all_maps, self.dim3)[idxDelta]
         imPsi = np.dsplit(self.all_maps, self.dim3)[idxPsi]
         
-        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(18,10))
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,8))
+        fig.tight_layout()
         
         ax1.clear
-        ax1.imshow(imDelta, cmap = 'gray')
+        arrR1 = ax1.imshow(imDelta, cmap = 'gray')
         ax1.set_title('Delta')
         ax1.grid(b=None)
+        fig.colorbar(arrR1, 
+                     ax=ax1, 
+                     shrink=0.5, 
+                     location='left',
+                     pad=0.048)
         
         ax2.clear
-        ax2.imshow(imPsi, cmap = 'gray')
+        arrR2 = ax2.imshow(imPsi, cmap = 'gray')
         ax2.grid(b=None)
         ax2.set_title('Psi')
+        fig.colorbar(arrR2, 
+                     ax=ax2, 
+                     shrink=0.5, 
+                     location='right')
     
     def plotSegmentedDeltaPsi(self, idxSelector = 0):
         
@@ -111,7 +121,7 @@ class lambdaVarEllimaps:
         imDelta = np.dsplit(self.segmentedStack, self.dim3)[idxDelta]
         imPsi = np.dsplit(self.segmentedStack, self.dim3)[idxPsi]
         
-        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(18,10))
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,8))
         fig.tight_layout()
         
         ax1.clear
@@ -122,7 +132,7 @@ class lambdaVarEllimaps:
                      ax=ax1, 
                      shrink=0.5, 
                      location='left',
-                     pad=0.045)
+                     pad=0.048)
         
         ax2.clear
         arrC2 = ax2.imshow(imPsi, cmap = 'viridis')
