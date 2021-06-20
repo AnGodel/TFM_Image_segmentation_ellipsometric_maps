@@ -106,12 +106,18 @@ class lambdaVarEllimaps:
         
         return segmentedStack
     
+    def pickonefromstack(self, imstack, idxSelector = 0):
+        
+        selected = np.dsplit(imstack, imstack.shape[2])[idxSelector]
+        
+        return selected
+    
     def plotDeltaPsi(self, idxSelector = 0):
         
         idxDelta = self.Dindexes[idxSelector]
         idxPsi = self.Pindexes[idxSelector]
-        imDelta = np.dsplit(self.all_maps, self.dim3)[idxDelta]
-        imPsi = np.dsplit(self.all_maps, self.dim3)[idxPsi]
+        imDelta = self.pickonefromstack(self.all_maps, idxDelta)
+        imPsi = self.pickonefromstack(self.all_maps, idxPsi)
         
         fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,8))
         fig.tight_layout()
@@ -139,8 +145,8 @@ class lambdaVarEllimaps:
         
         idxDelta = self.Dindexes[idxSelector]
         idxPsi = self.Pindexes[idxSelector]
-        imDelta = np.dsplit(self.segmentedStack, self.dim3)[idxDelta]
-        imPsi = np.dsplit(self.segmentedStack, self.dim3)[idxPsi]
+        imDelta = self.pickonefromstack(self.segmentedStack, idxDelta)
+        imPsi = self.pickonefromstack(self.segmentedStack, idxPsi)
         
         fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,8))
         fig.tight_layout()
