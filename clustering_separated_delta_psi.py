@@ -27,11 +27,11 @@ class lambdaVarEllimaps:
             
         self.getdatFile()
         self.readdatFile()
-        self.getWavelengths()
-        #self.getDeltaFiles()
-        #self.getPsiFiles()
-        
-        
+        self.WLarray = self.datatable['#lambda'].to_numpy()
+        self.DeltaFileList = self.datatable['Delta'].tolist()
+        self.PsiFileList = self.datatable['Psi'].tolist()
+        self.loadDeltaMaps()
+        self.loadPsiMaps()        
         #self.n_wl = np.arange(int(self.dim3/2))
         #self.Dindexes = [x for x in self.n_wl*2 if x%2 == 0]
         #self.Pindexes = [x+1 for x in self.n_wl*2 if x%2 == 0]
@@ -39,46 +39,34 @@ class lambdaVarEllimaps:
         #self.stackReshaped = self.all_maps.reshape(self.dim1*self.dim2, self.dim3)
         #self.segmentedStack = []
 
-    
     def getdatFile(self):
-        
+
         datFile = glob.glob(self.path + '/*.ds.dat')
         if len(datFile) >= 2:
-            raise ValueError('The instatiated folder contains data from more than one experiment. The folder must contain only one .ds.dat file. Please clean the files in the folder and try again')
+            raise ValueError('The instantiated folder contains data from more than one experiment. The folder must contain only one .ds.dat file. Please clean the files in the folder and try again')
         else:
             self.datFile = str(datFile[0])
     
     def readdatFile(self):
         
-        df = df = pd.read_csv(self.datFile, 
+        df = pd.read_csv(self.datFile, 
                               sep='\t', 
                               skiprows=[1])
         
         self.datatable = df
     
-    
-    def getWavelengths(self):
+    def loadDeltaMaps(self):
         
-        #wavelengths = self.datatable.['#lambda']
-        wllist = self.datatable['#lambda'].to_numpy()
-        
-        self.wllist = wllist
- 
+        DeltaMaps = list(map(at.loadmap_astroclean, self.DeltaFileList))
+        self.DeltaStack = np.dstack(DeltaMaps)
+        self.dim1 = self.DeltaStack.shape[0]
+        self.dim2 = self.DeltaStack.shape[1]
+        self.dim3 = self.DeltaStack.shape[2]
     
-    def getDeltaFiles(self):
+    def loadPsiMaps(self):
         
-        DeltaFilearray = pd.read_csv(self.datFile,
-                                    usecols=['Delta'],
-                                    skiprows=[1])
-        self.DeltaFilearray = DeltaFilearray
-    
-    def getPsiFiles(self):
-        
-        PsiFilearray = pd.read_csv(self.datFile,
-                                    usecols=['Psi'],
-                                    skiprows=[1])
-        self.PsiFilearray = PsiFilearray
-    
+        PsiMaps = list(map(at.loadmap_astroclean, self.PsiFileList))
+        self.PsiStack = np.dstack(PsiMaps)
     
     def getEstimation(self, k=(2,11), metric = 'distortion'):
         
