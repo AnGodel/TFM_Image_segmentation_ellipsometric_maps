@@ -27,9 +27,6 @@ class lambdaVarEllimaps:
             
         self.getdatFile()
         self.readdatFile()
-        self.WLarray = self.datatable['#lambda'].to_numpy()
-        self.DeltaFileList = self.datatable['Delta'].tolist()
-        self.PsiFileList = self.datatable['Psi'].tolist()
         self.loadDeltaMaps()
         self.loadPsiMaps()        
         #self.n_wl = np.arange(int(self.dim3/2))
@@ -52,8 +49,13 @@ class lambdaVarEllimaps:
         df = pd.read_csv(self.datFile, 
                               sep='\t', 
                               skiprows=[1])
-        
         self.datatable = df
+        self.WLarray = self.datatable['#lambda'].to_numpy()
+        self.nWL = len(self.WLarray)
+        DeltaFiles = self.datatable['Delta'].tolist()
+        PsiFiles = self.datatable['Psi'].tolist()
+        self.DeltaFileList = [os.path.join(self.path, elem) for elem in DeltaFiles]
+        self.PsiFileList = [os.path.join(self.path, elem) for elem in PsiFiles]
     
     def loadDeltaMaps(self):
         
