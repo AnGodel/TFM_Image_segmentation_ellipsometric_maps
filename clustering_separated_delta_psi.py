@@ -66,23 +66,30 @@ class lambdaVarEllimaps:
         self.dim1 = self.DeltaStack.shape[0]
         self.dim2 = self.DeltaStack.shape[1]
         self.dim3 = self.DeltaStack.shape[2]
+        self.DeltaStackReshaped = self.DeltaStack.reshape(self.dim1*self.dim2, self.dim3)
     
     def loadPsiMaps(self):
         
         PsiMaps = list(map(at.loadmap_astroclean, self.PsiFileList))
         self.PsiStack = np.dstack(PsiMaps)
+        self.PsiStackReshaped = self.PsiStack.reshape(self.dim1*self.dim2, self.dim3)
     
     def getEstimation(self, k=(2,11), metric = 'distortion'):
         
         model = KMeans(random_state=0)
         
-        visualizer = KElbowVisualizer(model, 
+        visualizerDelta = KElbowVisualizer(model, 
                                       k=k,
                                       metric = metric)
-        visualizer.fit(self.stackReshaped)
+        visualizerDelta.fit(self.DeltaStackReshaped)
+        
+        visualizerPsi = KElbowVisualizer(model, 
+                                      k=k,
+                                      metric = metric)
+        visualizerPsi.fit(self.PsiStackReshaped)
         
         
-        visualizer.show()
+        visualizerDelta.show(), visualizerPsi.show()
     
     #Having the two estimator visualizers in the same function makes the second estimator fail, somehow
     
@@ -90,24 +97,37 @@ class lambdaVarEllimaps:
         
         model = KMeans(random_state=0)
         
-        visualizer = KElbowVisualizer(model, 
-                                      k=k, 
+        visualizerDelta = KElbowVisualizer(model, 
+                                      k=k,
                                       metric = metric)
-        visualizer.fit(self.stackReshaped)
+        visualizerDelta.fit(self.DeltaStackReshaped)
         
-        visualizer.show()
+        visualizerPsi = KElbowVisualizer(model, 
+                                      k=k,
+                                      metric = metric)
+        visualizerPsi.fit(self.PsiStackReshaped)
+        
+        
+        visualizerDelta.show(), visualizerPsi.show()
     
     def clusterize(self, k = 5):
         
-        kmeans = KMeans(n_clusters = k, random_state = 0).fit(self.stackReshaped)
+        kmeansDelta = KMeans(n_clusters = k, random_state = 0).fit(self.DeltaStackReshaped)
         
-        segmented = kmeans.cluster_centers_[kmeans.labels_]
+        segmentedDelta = kmeansDelta.cluster_centers_[kmeansDelta.labels_]
         
-        segmentedStack = segmented.reshape(self.dim1, self.dim2, self.dim3)
+        segmentedDeltaStack = segmentedDelta.reshape(self.dim1, self.dim2, self.dim3)
         
-        self.segmentedStack = segmentedStack
+        kmeansPsi = KMeans(n_clusters = k, random_state = 0).fit(self.PsiStackReshaped)
         
-        return segmentedStack
+        segmentedPsi = kmeansPsi.cluster_centers_[kmeansPsi.labels_]
+        
+        segmentedPsiStack = segmentedPsi.reshape(self.dim1, self.dim2, self.dim3)
+        
+        self.segmentedDeltaStack = segmentedDeltaStack
+        self.segmentedPsiStack = segmentedPsiStack
+        
+        return segmentedDeltaStack, segmentedPsiStack
     
     def pickonefromstack(self, imstack, idxSelector = 0):
         
