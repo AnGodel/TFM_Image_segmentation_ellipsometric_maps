@@ -53,6 +53,7 @@ class lambdaVarEllimaps:
         
         self.datatable = df
         self.WLarray = self.datatable['lambda'].to_numpy()
+        self.indices = np.arange(len(self.WLarray))
         DeltaFiles = self.datatable['delta'].tolist()
         PsiFiles = self.datatable['psi'].tolist()
         self.nWL = len(self.WLarray)
@@ -137,10 +138,9 @@ class lambdaVarEllimaps:
     
     def plotDeltaPsi(self, idxSelector = 0):
         
-        idxDelta = self.Dindexes[idxSelector]
-        idxPsi = self.Pindexes[idxSelector]
-        imDelta = self.pickonefromstack(self.all_maps, idxDelta)
-        imPsi = self.pickonefromstack(self.all_maps, idxPsi)
+        idx = self.indices[idxSelector]
+        imDelta = self.pickonefromstack(self.DeltaStack, idx)
+        imPsi = self.pickonefromstack(self.PsiStack, idx)
         
         fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,8))
         fig.tight_layout()
@@ -166,10 +166,9 @@ class lambdaVarEllimaps:
     
     def plotSegmentedDeltaPsi(self, idxSelector = 0):
         
-        idxDelta = self.Dindexes[idxSelector]
-        idxPsi = self.Pindexes[idxSelector]
-        imDelta = self.pickonefromstack(self.segmentedStack, idxDelta)
-        imPsi = self.pickonefromstack(self.segmentedStack, idxPsi)
+        idx = self.indices[idxSelector]
+        imDelta = self.pickonefromstack(self.segmentedDeltaStack, idx)
+        imPsi = self.pickonefromstack(self.segmentedPsiStack, idx)
         
         fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,8))
         fig.tight_layout()
