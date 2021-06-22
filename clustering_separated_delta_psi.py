@@ -49,11 +49,13 @@ class lambdaVarEllimaps:
         df = pd.read_csv(self.datFile, 
                               sep='\t', 
                               skiprows=[1])
+        df.columns = df.columns.str.replace('#', '').str.lower()
+        
         self.datatable = df
-        self.WLarray = self.datatable['#lambda'].to_numpy()
+        self.WLarray = self.datatable['lambda'].to_numpy()
+        DeltaFiles = self.datatable['delta'].tolist()
+        PsiFiles = self.datatable['psi'].tolist()
         self.nWL = len(self.WLarray)
-        DeltaFiles = self.datatable['Delta'].tolist()
-        PsiFiles = self.datatable['Psi'].tolist()
         self.DeltaFileList = [os.path.join(self.path, elem) for elem in DeltaFiles]
         self.PsiFileList = [os.path.join(self.path, elem) for elem in PsiFiles]
     
