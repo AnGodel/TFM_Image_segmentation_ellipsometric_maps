@@ -143,7 +143,7 @@ class lambdaVarEllimaps:
         self.segmentedDeltaStack = segmentedDeltaStack
         self.segmentedPsiStack = segmentedPsiStack
         
-        return segmentedDeltaStack, segmentedPsiStack
+        return segmentedDelta, segmentedPsi
     
     def pickonefromstack(self, imstack, idxSelector = 0):
         
@@ -170,7 +170,7 @@ class lambdaVarEllimaps:
                      shrink=0.5, 
                      location='left',
                      pad=0.048)
-        fig.suptitle('Wavelength {}: {} nm'.format(idxSelector, self.WLdict[idxSelector]))
+        fig.suptitle('Map index: {}: Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]))
         ax2.clear
         arrR2 = ax2.imshow(imPsi, cmap = 'gray')
         ax2.grid(b=None)
@@ -198,7 +198,7 @@ class lambdaVarEllimaps:
                      shrink=0.5, 
                      location='left',
                      pad=0.048)
-        fig.suptitle('Wavelength {}: {} nm'.format(idxSelector, self.WLdict[idxSelector]))
+        fig.suptitle('Map index: {}: Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]))
         ax2.clear
         arrC2 = ax2.imshow(imPsi, cmap = 'viridis')
         ax2.grid(b=None)
