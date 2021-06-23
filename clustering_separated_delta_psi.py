@@ -25,13 +25,26 @@ class lambdaVarEllimaps:
         else:
             self.path = path
             
-        self.getdatFile()
-        self.readdatFile()
-        self.loadDeltaMaps()
-        self.loadPsiMaps()        
-        #self.n_wl = np.arange(int(self.dim3/2))
-        #self.Dindexes = [x for x in self.n_wl*2 if x%2 == 0]
-        #self.Pindexes = [x+1 for x in self.n_wl*2 if x%2 == 0]
+        self.getdatFile() #will find the .ds.dat file in the folder. #
+        #Instantiates self.datFile
+        self.readdatFile() #reads the .dat file using pandas, intantiating:
+            #self.datatable: no further use
+            #self.WLarray: numpy array with a list of wavelengths used in the measurement
+            #self.indices: list of indices of WLarray. Used later for the map index selector
+            #self.nWL: just for easy retrieving the number of WL (number of maps) in the measurement
+            #self.DeltaFileList: a list of file paths of the delta maps for the measurement. 
+            #self.PsiFileList: same, but for psi maps. The load function will iterate over them to create readable images (numpy arrays)
+        self.loadDeltaMaps() # transforms raw delta maps into readable images.
+        #Also does some pre-processing, including smoothing and NaN removal by convolution of a 9x9 kernel
+        #The NaN removal will fail if there are NaN areas larger than the kernel in the raw map.
+        #Instantiates:
+            #self.DeltaStack: a 'pile' of maps, with dimensions (rows,cols,nWL)
+            #self.DeltaStackReshaped: reshaped stack to (rows*cols, nWL) which can then be clusterized with KMeans
+            #self.dim1, self.dim2, self.dim3: rows, cols, nWL, for easy retrieval/later use in other functions
+        self.loadPsiMaps() #same as loadDeltaMaps but for psi maps. The dimensions are the same, so they are not instantiated again       
+        #Instantiates:
+            #self.PsiStack
+            #self.PsiStackReshaped
         
         #self.stackReshaped = self.all_maps.reshape(self.dim1*self.dim2, self.dim3)
         #self.segmentedStack = []
