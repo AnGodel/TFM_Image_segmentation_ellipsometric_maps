@@ -31,6 +31,7 @@ class lambdaVarEllimaps:
             #self.datatable: no further use
             #self.WLarray: numpy array with a list of wavelengths used in the measurement
             #self.indices: list of indices of WLarray. Used later for the map index selector
+            #self.WLdict: dict with indices as keys and WL as values. For later use as reference in plots
             #self.nWL: just for easy retrieving the number of WL (number of maps) in the measurement
             #self.DeltaFileList: a list of file paths of the delta maps for the measurement. 
             #self.PsiFileList: same, but for psi maps. The load function will iterate over them to create readable images (numpy arrays)
@@ -38,7 +39,7 @@ class lambdaVarEllimaps:
         #Also does some pre-processing, including smoothing and NaN removal by convolution of a 9x9 kernel
         #The NaN removal will fail if there are NaN areas larger than the kernel in the raw map.
         #Instantiates:
-            #self.DeltaStack: a 'pile' of maps, with dimensions (rows,cols,nWL)
+            #self.DeltaStack: a 'pile' of processed maps, with dimensions (rows,cols,nWL)
             #self.DeltaStackReshaped: reshaped stack to (rows*cols, nWL) which can then be clusterized with KMeans
             #self.dim1, self.dim2, self.dim3: rows, cols, nWL, for easy retrieval/later use in other functions
         self.loadPsiMaps() #same as loadDeltaMaps but for psi maps. The dimensions are the same, so they are not instantiated again       
@@ -67,6 +68,7 @@ class lambdaVarEllimaps:
         self.datatable = df
         self.WLarray = self.datatable['lambda'].to_numpy()
         self.indices = np.arange(len(self.WLarray))
+        self.WLdict = dict(zip(self.indices, self.WLarray))
         DeltaFiles = self.datatable['delta'].tolist()
         PsiFiles = self.datatable['psi'].tolist()
         self.nWL = len(self.WLarray)
@@ -155,8 +157,9 @@ class lambdaVarEllimaps:
         imDelta = self.pickonefromstack(self.DeltaStack, idx)
         imPsi = self.pickonefromstack(self.PsiStack, idx)
         
-        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,8))
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,11))
         fig.tight_layout()
+        
         
         ax1.clear
         arrR1 = ax1.imshow(imDelta, cmap = 'gray')
@@ -167,7 +170,7 @@ class lambdaVarEllimaps:
                      shrink=0.5, 
                      location='left',
                      pad=0.048)
-        
+        fig.suptitle('Wavelength {}: {} nm'.format(idxSelector, self.WLdict[idxSelector]))
         ax2.clear
         arrR2 = ax2.imshow(imPsi, cmap = 'gray')
         ax2.grid(b=None)
@@ -183,7 +186,7 @@ class lambdaVarEllimaps:
         imDelta = self.pickonefromstack(self.segmentedDeltaStack, idx)
         imPsi = self.pickonefromstack(self.segmentedPsiStack, idx)
         
-        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,8))
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,11))
         fig.tight_layout()
         
         ax1.clear
@@ -195,7 +198,7 @@ class lambdaVarEllimaps:
                      shrink=0.5, 
                      location='left',
                      pad=0.048)
-        
+        fig.suptitle('Wavelength {}: {} nm'.format(idxSelector, self.WLdict[idxSelector]))
         ax2.clear
         arrC2 = ax2.imshow(imPsi, cmap = 'viridis')
         ax2.grid(b=None)
