@@ -20,12 +20,12 @@ The maps naming convention is different depending on the grabbing method:
 - ~~try to improve the k estimation decreasing max number of clusters in the estimator~~
   - this does not have an effect with the distortion method (k still 4), but makes the Calinski_harabasz fail to find an optimum k. Keeping the max number of cluster at at least 10 give us the window of k 4 to 7
   - the silhouette method fails when used with a stack of maps, or at least it is too slow to be used. Had to interrupt the python kernel with every try.
-- try segmentation after combining delta and psi maps in one using the math provided by MD
-  - this might be interesting in order to reduce the computing time of the clustering but will have other disadvantages:
-    - because of the math operation, the pixel of the combined map will have small values, in the range -1,1, which will likely need to be rescaled for proper plotting
-    - with or without rescaling, the labels obtained by this segmentation can't be directly used:
-      - of this combined map will be useful only for finding the shapes and contours of the clusters and export a mask to be applied in the original maps to extract the numeric values
-      - another option would by applying reversed math to get delta and psi values from the labels of the segmentation of C and S maps
+- ~~try segmentation after combining delta and psi maps in one using the math provided by MD~~
+  - ~~this might be interesting in order to reduce the computing time of the clustering but will have other disadvantages:~~
+    - ~~because of the math operation, the pixel of the combined map will have small values, in the range -1,1, which will likely need to be rescaled for proper plotting~~
+    - ~~with or without rescaling, the labels obtained by this segmentation can't be directly used:~~
+      - ~~of this combined map will be useful only for finding the shapes and contours of the clusters and export a mask to be applied in the original maps to extract the numeric values~~
+      - ~~another option would by applying reversed math to get delta and psi values from the labels of the segmentation of C and S maps~~
 - ~~test the computing time on small and large stacks for both the estimation with yellowbrick visualizers and the segmentation itself~~
   - with sets of 22 and 63 maps it goes relatively fast. But the test with a set of 140 maps took about 10 minutes to just load all files into the class. 
   - further testing is required in order to check whether the required time icreases exponentially with the number of maps or the tested large dataset was containing larger images with more pixels.
@@ -40,3 +40,6 @@ The maps naming convention is different depending on the grabbing method:
 - apply canny edge detection or any other image method to extract the contours of the map segments.
   - the goal here is to somehow apply a "mask" in the original map stack before segmenting, so that an  area if interest can be "cropped" and selected for a traditional pixel by pixel fitting. 
     - This is something that can be done manually with DataStudio, which is quite tedious.
+
+- include bar plot of the segmented maps, as in the test notebook. It gives a fast visualization of how much the cluster values are overlapping, which might be an indication that the clustering would work also with less clusters.
+- empaquetar el modo "manual" de sacar el "cluster pixel shot" encontrado en el notebook usando np.where and np.unique

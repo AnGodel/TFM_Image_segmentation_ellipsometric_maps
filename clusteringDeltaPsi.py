@@ -143,7 +143,7 @@ class lambdaVarEllimaps:
         self.segmentedDeltaStack = segmentedDeltaStack
         self.segmentedPsiStack = segmentedPsiStack
         
-        return segmentedDelta, segmentedPsi
+        return segmentedDelta, segmentedDeltaStack, segmentedPsi, segmentedPsiStack
     
     def pickonefromstack(self, imstack, idxSelector = 0):
         
