@@ -150,12 +150,58 @@ class lambdaVarEllimaps:
         self.Pcluster_centers_ = kmeansPsi.cluster_centers_
         self.Pcluster_labels_ = kmeansPsi.labels_
     
-    def clustershot(self):
-        pass
-        #n_clusters = self.
+    def clustershot(self, c_selector):
+        #c_selector must be int, in the range (0-(k-1)), being k the number of clusters used in clusterize()
+        self.n_clustersList = np.arange(self.Dcluster_centers_.shape[0])
+        self.firstSegmentedDeltamap = self.segmentedDeltaStack[:,:,0]
+        self.firstSegmentedPsimap = self.segmentedPsiStack[:,:,0]
+        #first segmented Deltamap is used to identify position of clustered pixels. 
+        #It must be tested how that overlaps in psi maps, as chances are that len(pval) is then > 1
+        
+        C_ = np.unique(self.firstSegmentedDeltamap)[c_selector] #select one value from unique values in first map
+        C_ys, C_xs = np.where(self.firstSegmentedDeltamap==C_) #identify position of all pixels with that value in the map
+        
+        C_Deltapixelshot = []
+        for wl in self.indices:
+            pxval = np.unique(self.segmentedDeltaStack[C_ys,C_xs,wl])
+            C_Deltapixelshot.append(pxval[0]) # the [0] here is just to append the float and not the array [float]
+            #raise error if len(pxval)>1??
+        
+        return C_Deltapixelshot
+    
+    def clustershottest(self):
+        #c_selector must be int, in the range (0-(k-1)), being k the number of clusters used in clusterize()
+        self.n_clustersList = np.arange(self.Dcluster_centers_.shape[0])
+        self.firstSegmentedDeltamap = self.segmentedDeltaStack[:,:,0]
+        self.firstSegmentedPsimap = self.segmentedPsiStack[:,:,0] #not used at all? remove?
+        #first segmented Deltamap is used to identify position of clustered pixels. 
+        #It must be tested how that overlaps in psi maps, as chances are that len(pval) is then > 1
+        
+        all_DeltaShots = []
+        all_PsiShots = []
+        
+        for n_cluster in self.n_clustersList:
+            
+            C_ = np.unique(self.firstSegmentedDeltamap)[n_cluster] #select one value from unique values in first map
+            C_ys, C_xs = np.where(self.firstSegmentedDeltamap==C_) #identify position of all pixels with that value in the map
+        
+            C_Deltapixelshot = []
+            C_Psipixelshot = []
+
+            for wl in self.indices:
+                Dpxval = np.unique(self.segmentedDeltaStack[C_ys,C_xs,wl])
+                C_Deltapixelshot.append(Dpxval[0]) # the [0] here is just to append the float and not the array [float]
+                #raise error if len(pxval)>1??
+                Ppxval = np.unique(self.segmentedPsiStack[C_ys,C_xs,wl])
+                C_Psipixelshot.append(Ppxval[0])
+        
+            all_DeltaShots.append(C_Deltapixelshot)
+            all_PsiShots.append(C_Psipixelshot)
+        self.all_DeltaShots = all_DeltaShots
+        self.all_PsiShots = all_PsiShots
     
     def pickonefromstack(self, imstack, idxSelector = 0):
-        
+        #probably unnecessary, as it can be replaced by imstack[:,:,idxSelector]
         selected = np.dsplit(imstack, imstack.shape[2])[idxSelector]
         
         return selected
