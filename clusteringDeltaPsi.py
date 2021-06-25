@@ -134,16 +134,25 @@ class lambdaVarEllimaps:
         
         segmentedDeltaStack = segmentedDelta.reshape(self.dim1, self.dim2, self.dim3)
         
+        self.segmentedDelta = segmentedDelta
+        self.segmentedDeltaStack = segmentedDeltaStack
+        self.Dcluster_centers_ = kmeansDelta.cluster_centers_
+        self.Dcluster_labels_ = kmeansDelta.labels_
+        
         kmeansPsi = KMeans(n_clusters = k, random_state = 0).fit(self.PsiStackReshaped)
         
         segmentedPsi = kmeansPsi.cluster_centers_[kmeansPsi.labels_]
         
         segmentedPsiStack = segmentedPsi.reshape(self.dim1, self.dim2, self.dim3)
         
-        self.segmentedDeltaStack = segmentedDeltaStack
+        self.segmentedPsi = segmentedPsi
         self.segmentedPsiStack = segmentedPsiStack
-        
-        return segmentedDelta, segmentedDeltaStack, segmentedPsi, segmentedPsiStack
+        self.Pcluster_centers_ = kmeansPsi.cluster_centers_
+        self.Pcluster_labels_ = kmeansPsi.labels_
+    
+    def clustershot(self):
+        pass
+        #n_clusters = self.
     
     def pickonefromstack(self, imstack, idxSelector = 0):
         
