@@ -150,26 +150,7 @@ class lambdaVarEllimaps:
         self.Pcluster_centers_ = kmeansPsi.cluster_centers_
         self.Pcluster_labels_ = kmeansPsi.labels_
     
-    def clustershot(self, c_selector):
-        #c_selector must be int, in the range (0-(k-1)), being k the number of clusters used in clusterize()
-        self.n_clustersList = np.arange(self.Dcluster_centers_.shape[0])
-        self.firstSegmentedDeltamap = self.segmentedDeltaStack[:,:,0]
-        self.firstSegmentedPsimap = self.segmentedPsiStack[:,:,0]
-        #first segmented Deltamap is used to identify position of clustered pixels. 
-        #It must be tested how that overlaps in psi maps, as chances are that len(pval) is then > 1
-        
-        C_ = np.unique(self.firstSegmentedDeltamap)[c_selector] #select one value from unique values in first map
-        C_ys, C_xs = np.where(self.firstSegmentedDeltamap==C_) #identify position of all pixels with that value in the map
-        
-        C_Deltapixelshot = []
-        for wl in self.indices:
-            pxval = np.unique(self.segmentedDeltaStack[C_ys,C_xs,wl])
-            C_Deltapixelshot.append(pxval[0]) # the [0] here is just to append the float and not the array [float]
-            #raise error if len(pxval)>1??
-        
-        return C_Deltapixelshot
-    
-    def clustershottest(self):
+    def clustershot(self):
         #c_selector must be int, in the range (0-(k-1)), being k the number of clusters used in clusterize()
         self.n_clustersList = np.arange(self.Dcluster_centers_.shape[0])
         self.firstSegmentedDeltamap = self.segmentedDeltaStack[:,:,0]
@@ -262,3 +243,50 @@ class lambdaVarEllimaps:
                      ax=ax2, 
                      shrink=0.5, 
                      location='right')
+    
+    def plotOneShot(self, C_Selector = 0):
+        
+        idx = self.n_clustersList[C_Selector]
+        Deltas = self.all_DeltaShots[C_Selector]
+        Psis = self.all_PsiShots[C_Selector]
+        WL = self.WLarray
+        
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,5))
+        fig.tight_layout()
+        
+        
+        ax1.clear
+        ax1.plot(self.WLarray, Deltas, color = 'red')
+        ax1.set_title('Delta')
+        ax1.grid(b=None)
+        
+        fig.suptitle('Cluster index: {}'.format(C_Selector))
+        ax2.clear
+        ax2.plot(self.WLarray, Psis, color = 'blue')
+        ax2.grid(b=None)
+        ax2.set_title('Psi')
+
+    def plotAllShots(self, C_Selector = 0):
+            
+        idx = self.n_clustersList[C_Selector]
+        Deltas = self.all_DeltaShots
+        Psis = self.all_PsiShots
+        WL = self.WLarray
+        
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,5))
+        fig.tight_layout()
+        
+        
+        ax1.clear
+        for C_Selector in self.n_clustersList:
+            ax1.plot(self.WLarray, Deltas[C_Selector], alpha=0.7)
+        ax1.scatter(self.WLarray, Deltas[C_Selector], color='red')
+        ax1.set_title('Delta')
+        ax1.grid(b=None)
+        
+        fig.suptitle('Cluster index: {}'.format(C_Selector))
+        for C_Selector in self.n_clustersList:
+            ax2.plot(self.WLarray, Psis[C_Selector], alpha=0.7)
+        ax2.scatter(self.WLarray, Psis[C_Selector], color='blue')
+        ax2.grid(b=None)
+        ax2.set_title('Psi')
