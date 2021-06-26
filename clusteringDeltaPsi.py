@@ -128,6 +128,8 @@ class lambdaVarEllimaps:
     
     def clusterize(self, k = 5):
         
+        self.n_clustersList = np.arange(k)
+        
         kmeansDelta = KMeans(n_clusters = k, random_state = 0).fit(self.DeltaStackReshaped)
         
         segmentedDelta = kmeansDelta.cluster_centers_[kmeansDelta.labels_]
@@ -151,8 +153,6 @@ class lambdaVarEllimaps:
         self.Pcluster_labels_ = kmeansPsi.labels_
     
     def clustershot(self):
-        #c_selector must be int, in the range (0-(k-1)), being k the number of clusters used in clusterize()
-        self.n_clustersList = np.arange(self.Dcluster_centers_.shape[0])
         self.firstSegmentedDeltamap = self.segmentedDeltaStack[:,:,0]
         self.firstSegmentedPsimap = self.segmentedPsiStack[:,:,0] #not used at all? remove?
         #first segmented Deltamap is used to identify position of clustered pixels. 
@@ -161,9 +161,9 @@ class lambdaVarEllimaps:
         all_DeltaShots = []
         all_PsiShots = []
         
-        for n_cluster in self.n_clustersList:
+        for cluster_idx in self.n_clustersList:
             
-            C_ = np.unique(self.firstSegmentedDeltamap)[n_cluster] #select one value from unique values in first map
+            C_ = np.unique(self.firstSegmentedDeltamap)[cluster_idx] #select one value from unique values in first map
             C_ys, C_xs = np.where(self.firstSegmentedDeltamap==C_) #identify position of all pixels with that value in the map
         
             C_Deltapixelshot = []
@@ -251,7 +251,7 @@ class lambdaVarEllimaps:
         Psis = self.all_PsiShots[C_Selector]
         WL = self.WLarray
         
-        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,5))
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
         fig.tight_layout()
         
         
