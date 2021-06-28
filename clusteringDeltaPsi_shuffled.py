@@ -46,9 +46,7 @@ class lambdaVarEllimaps:
         #Instantiates:
             #self.PsiStack
             #self.PsiStackReshaped
-        
-        #self.stackReshaped = self.all_maps.reshape(self.dim1*self.dim2, self.dim3)
-        #self.segmentedStack = []
+       
         self.loadAllMaps()
 
     def getdatFile(self):
@@ -68,8 +66,8 @@ class lambdaVarEllimaps:
         
         self.datatable = df
         self.WLarray = self.datatable['lambda'].to_numpy()
-        self.indices = np.arange(len(self.WLarray))
-        self.WLdict = dict(zip(self.indices, self.WLarray))
+        self.WLIndices = np.arange(len(self.WLarray))
+        self.WLdict = dict(zip(self.WLIndices, self.WLarray))
         DeltaFiles = self.datatable['delta'].tolist()
         PsiFiles = self.datatable['psi'].tolist()
         self.nWL = len(self.WLarray)
@@ -213,21 +211,20 @@ class lambdaVarEllimaps:
     def clustershot_shufflestack(self):
         self.firstSegmentedDeltamap = self.segmentedDeltaStack[:,:,0]
         #first segmented Deltamap is used to identify position of clustered pixels. 
-        #It must be tested how that overlaps in psi maps, as chances are that len(pval) is then > 1 ##this should not be relevant in shuffled stacks
+        #It could be any map, as here in the shuffled stack all clusters will always overlap along the 3rd axis        
         
         all_Shots = []
         
         for cluster_idx in self.n_clustersList_shuffled:
             
-            C_ = np.unique(self.firstSegmentedDeltamap)[cluster_idx] #select one value from unique values in first map
-            C_ys, C_xs = np.where(self.firstSegmentedDeltamap==C_) #identify position of all pixels with that value in the map
+            C_ = np.unique(self.firstSegmentedDeltamap)[cluster_idx] #selects one value from unique values in first map
+            C_ys, C_xs = np.where(self.firstSegmentedDeltamap==C_) #identifies position of all pixels with that value in the map
         
             C_pixelshot = []
 
             for wl in self.indices:
                 Dpxval = np.unique(self.segmentedShuffledStack[C_ys,C_xs,wl])
                 C_pixelshot.append(Dpxval[0]) # the [0] here is just to append the float and not the array [float]
-                #raise error if len(pxval)>1??
             all_Shots.append(C_pixelshot)
             
         self.all_Shots = all_Shots
@@ -240,7 +237,7 @@ class lambdaVarEllimaps:
     
     def plotDeltaPsi(self, idxSelector = 0):
         
-        idx = self.indices[idxSelector]
+        idx = self.WLindices[idxSelector]
         imDelta = self.pickonefromstack(self.DeltaStack, idx)
         imPsi = self.pickonefromstack(self.PsiStack, idx)
         
@@ -269,7 +266,7 @@ class lambdaVarEllimaps:
     
     def plotSegmentedDeltaPsi(self, idxSelector = 0):
         
-        idx = self.indices[idxSelector]
+        idx = self.WLindices[idxSelector]
         imDelta = self.pickonefromstack(self.segmentedDeltaStack, idx)
         imPsi = self.pickonefromstack(self.segmentedPsiStack, idx)
         
