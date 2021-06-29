@@ -25,29 +25,25 @@ class lambdaVarEllimaps:
         else:
             self.path = path
             
-        self.getdatFile() #will find the .ds.dat file in the folder. #
-        #Instantiates self.datFile
-        self.readdatFile() #reads the .dat file using pandas, intantiating:
+        self.getdatFile()  # will find the .ds.dat file in the folder. #
+        # Instantiates self.datFile
+        self.readdatFile()  # reads the .dat file using pandas, intantiating:
             #self.datatable: no further use
             #self.WLarray: numpy array with a list of wavelengths used in the measurement
             #self.indices: list of indices of WLarray. Used later for the map index selector
             #self.WLdict: dict with indices as keys and WL as values. For later use as reference in plots
             #self.nWL: just for easy retrieving the number of WL (number of maps) in the measurement
             #self.DeltaFileList: a list of file paths of the delta maps for the measurement. 
-            #self.PsiFileList: same, but for psi maps. The load function will iterate over them to create readable images (numpy arrays)
-        self.loadDeltaMaps() # transforms raw delta maps into readable images.
+            #self.PsiFileList: same, but for psi maps. 
+            #self.AllFileList: a list of file paths alternating delta,psi files
+            # The load function will iterate over them to create a stack of "shuffled" readable images (numpy arrays)
+        self.loadAllMaps()  # transforms raw delta maps into readable images.
         #Also does some pre-processing, including smoothing and NaN removal by convolution of a 9x9 kernel
         #The NaN removal will fail if there are NaN areas larger than the kernel in the raw map.
         #Instantiates:
-            #self.DeltaStack: a 'pile' of processed maps, with dimensions (rows,cols,nWL)
-            #self.DeltaStackReshaped: reshaped stack to (rows*cols, nWL) which can then be clusterized with KMeans
-            #self.dim1, self.dim2, self.dim3: rows, cols, nWL, for easy retrieval/later use in other functions
-        self.loadPsiMaps() #same as loadDeltaMaps but for psi maps. The dimensions are the same, so they are not instantiated again       
-        #Instantiates:
-            #self.PsiStack
-            #self.PsiStackReshaped
-       
-        self.loadAllMaps()
+            # self.AllShuffledStack: the stack of shuffled maps
+            # self.AllShuffledStackReshaped: the reshaped stack ready for being passed to KMeans algorithm
+            # self.dim1all, self.dim2all, self.dim3all: dimensions of the stack, being dim3 nWL*2
 
     def getdatFile(self):
 
@@ -78,45 +74,25 @@ class lambdaVarEllimaps:
             self.AllFileList.append(item1)
             self.AllFileList.append(item2)
         
-    
-    def loadDeltaMaps(self):
-        
-        DeltaMaps = list(map(at.loadmap_astroclean, self.DeltaFileList))
-        self.DeltaStack = np.dstack(DeltaMaps)
-        self.dim1 = self.DeltaStack.shape[0]
-        self.dim2 = self.DeltaStack.shape[1]
-        self.dim3 = self.DeltaStack.shape[2]
-        self.DeltaStackReshaped = self.DeltaStack.reshape(self.dim1*self.dim2, self.dim3)
-    
-    def loadPsiMaps(self):
-        
-        PsiMaps = list(map(at.loadmap_astroclean, self.PsiFileList))
-        self.PsiStack = np.dstack(PsiMaps)
-        self.PsiStackReshaped = self.PsiStack.reshape(self.dim1*self.dim2, self.dim3)
-        
     def loadAllMaps(self):
         
         AllMaps = list(map(at.loadmap_astroclean, self.AllFileList))
         self.AllShuffledStack = np.dstack(AllMaps)
+        self.dim1all = self.AllShuffledStack.shape[0]
+        self.dim2all = self.AllShuffledStack.shape[1]
         self.dim3all = self.AllShuffledStack.shape[2]
-        self.AllShuffledStackReshaped = self.AllShuffledStack.reshape(self.dim1*self.dim2, self.dim3all)
+        self.AllShuffledStackReshaped = self.AllShuffledStack.reshape(self.dim1all*self.dim2all, self.dim3all)
     
     def getEstimation(self, k=(2,11), metric = 'distortion'):
         
         model = KMeans(random_state=0)
         
-        visualizerDelta = KElbowVisualizer(model, 
+        visualizer = KElbowVisualizer(model, 
                                       k=k,
                                       metric = metric)
-        visualizerDelta.fit(self.DeltaStackReshaped)
+        visualizer.fit(self.AllShuffledStackReshaped)
         
-        visualizerPsi = KElbowVisualizer(model, 
-                                      k=k,
-                                      metric = metric)
-        visualizerPsi.fit(self.PsiStackReshaped)
-        
-        
-        visualizerDelta.show(), visualizerPsi.show()
+        visualizer.show()
     
     #Having the two estimator visualizers in the same function makes the second estimator fail, somehow
     
@@ -124,20 +100,14 @@ class lambdaVarEllimaps:
         
         model = KMeans(random_state=0)
         
-        visualizerDelta = KElbowVisualizer(model, 
+        visualizer = KElbowVisualizer(model, 
                                       k=k,
                                       metric = metric)
-        visualizerDelta.fit(self.DeltaStackReshaped)
+        visualizer.fit(self.AllShuffledStackReshaped)
         
-        visualizerPsi = KElbowVisualizer(model, 
-                                      k=k,
-                                      metric = metric)
-        visualizerPsi.fit(self.PsiStackReshaped)
+        visualizer.show()
         
-        
-        visualizerDelta.show(), visualizerPsi.show()
-        
-    def clusterizeShuffledStack(self, ks = 5):
+    def clusterize(self, ks = 5):
         
         self.n_clustersList_shuffled = np.arange(ks)
         
@@ -152,62 +122,6 @@ class lambdaVarEllimaps:
         self.cluster_centers_ = kmeans.cluster_centers_
         self.cluster_labels_ = kmeans.labels_
         
-    def clusterize(self, k = 5):
-        
-        self.n_clustersList = np.arange(k)
-        
-        kmeansDelta = KMeans(n_clusters = k, random_state = 0).fit(self.DeltaStackReshaped)
-        
-        segmentedDelta = kmeansDelta.cluster_centers_[kmeansDelta.labels_]
-        
-        segmentedDeltaStack = segmentedDelta.reshape(self.dim1, self.dim2, self.dim3)
-        
-        self.segmentedDelta = segmentedDelta
-        self.segmentedDeltaStack = segmentedDeltaStack
-        self.Dcluster_centers_ = kmeansDelta.cluster_centers_
-        self.Dcluster_labels_ = kmeansDelta.labels_
-        
-        kmeansPsi = KMeans(n_clusters = k, random_state = 0).fit(self.PsiStackReshaped)
-        
-        segmentedPsi = kmeansPsi.cluster_centers_[kmeansPsi.labels_]
-        
-        segmentedPsiStack = segmentedPsi.reshape(self.dim1, self.dim2, self.dim3)
-        
-        self.segmentedPsi = segmentedPsi
-        self.segmentedPsiStack = segmentedPsiStack
-        self.Pcluster_centers_ = kmeansPsi.cluster_centers_
-        self.Pcluster_labels_ = kmeansPsi.labels_
-        
-    
-    def clustershot(self):
-        self.firstSegmentedDeltamap = self.segmentedDeltaStack[:,:,0]
-        self.firstSegmentedPsimap = self.segmentedPsiStack[:,:,0] #not used at all? remove?
-        #first segmented Deltamap is used to identify position of clustered pixels. 
-        #It must be tested how that overlaps in psi maps, as chances are that len(pval) is then > 1
-        
-        all_DeltaShots = []
-        all_PsiShots = []
-        
-        for cluster_idx in self.n_clustersList:
-            
-            C_ = np.unique(self.firstSegmentedDeltamap)[cluster_idx] #select one value from unique values in first map
-            C_ys, C_xs = np.where(self.firstSegmentedDeltamap==C_) #identify position of all pixels with that value in the map
-        
-            C_Deltapixelshot = []
-            C_Psipixelshot = []
-
-            for wl in self.indices:
-                Dpxval = np.unique(self.segmentedDeltaStack[C_ys,C_xs,wl])
-                C_Deltapixelshot.append(Dpxval[0]) # the [0] here is just to append the float and not the array [float]
-                #raise error if len(pxval)>1??
-                Ppxval = np.unique(self.segmentedPsiStack[C_ys,C_xs,wl])
-                C_Psipixelshot.append(Ppxval[0])
-        
-            all_DeltaShots.append(C_Deltapixelshot)
-            all_PsiShots.append(C_Psipixelshot)
-        self.all_DeltaShots = all_DeltaShots
-        self.all_PsiShots = all_PsiShots
-    
     def clustershot_shufflestack(self):
         self.firstSegmentedDeltamap = self.segmentedDeltaStack[:,:,0]
         #first segmented Deltamap is used to identify position of clustered pixels. 
