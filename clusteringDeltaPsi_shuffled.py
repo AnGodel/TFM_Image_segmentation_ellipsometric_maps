@@ -154,12 +154,6 @@ class lambdaVarEllimaps:
         self.delta_shot = delta_shot
         self.psi_shot = psi_shot
     
-    def pickonefromstack(self, imstack, idxSelector = 0):
-        #probably unnecessary, as it can be replaced by imstack[:,:,idxSelector]
-        selected = np.dsplit(imstack, imstack.shape[2])[idxSelector]
-        
-        return selected
-    
     def plotDeltaPsi(self, idxSelector = 0):
         
         imDelta = self.AllShuffledStack[:,:,self.DeltaIndices[idxSelector]]
