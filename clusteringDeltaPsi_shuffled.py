@@ -130,16 +130,16 @@ class lambdaVarEllimaps:
         #first segmented Deltamap is used to identify position of clustered pixels. 
         #It could be any map, as here in the shuffled stack all clusters will always overlap along the 3rd axis        
         
-        delta_shot = []
-        psi_shot = []
+        delta_shot = [] # each row is a  cluster shot of delta values
+        psi_shot = [] # each row is a cluster shot of psi values
         
         for cluster_idx in self.n_clustersList_shuffled:
             
             C_ = np.unique(self.firstSegmentedDeltamap)[cluster_idx] #selects one value from unique values in first map
             C_ys, C_xs = np.where(self.firstSegmentedDeltamap==C_) #identifies position of all pixels with that value in the map
         
-            D_pixelshot = []
-            P_pixelshot = []
+            D_pixelshot = [] # single cluster shot in the delta maps of the stack
+            P_pixelshot = [] # single cluster shot in the psi maps of the stack
 
             for ellimap in self.DeltaIndices:
                 Dpxval = np.unique(self.segmentedShuffledStack[C_ys,C_xs,ellimap])
@@ -162,9 +162,8 @@ class lambdaVarEllimaps:
     
     def plotDeltaPsi(self, idxSelector = 0):
         
-        idx = self.WLindices[idxSelector]
-        imDelta = self.pickonefromstack(self.DeltaStack, idx)
-        imPsi = self.pickonefromstack(self.PsiStack, idx)
+        imDelta = self.AllShuffledStack[:,:,self.DeltaIndices[idxSelector]]
+        imPsi = self.AllShuffledStack[:,:,self.PsiIndices[idxSelector]]
         
         fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,11))
         fig.tight_layout()
@@ -191,9 +190,8 @@ class lambdaVarEllimaps:
     
     def plotSegmentedDeltaPsi(self, idxSelector = 0):
         
-        idx = self.WLindices[idxSelector]
-        imDelta = self.pickonefromstack(self.segmentedDeltaStack, idx)
-        imPsi = self.pickonefromstack(self.segmentedPsiStack, idx)
+        imDelta = self.segmentedShuffledStack[:,:,self.DeltaIndices[idxSelector]]
+        imPsi = self.segmentedShuffledStack[:,:,self.PsiIndices[idxSelector]]
         
         fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,11))
         fig.tight_layout()
