@@ -211,9 +211,9 @@ class lambdaVarEllimaps:
     
     def plotOneShot(self, C_Selector = 0):
         
-        idx = self.n_clustersList[C_Selector]
-        Deltas = self.all_DeltaShots[C_Selector]
-        Psis = self.all_PsiShots[C_Selector]
+        idx = self.n_clustersList_shuffled[C_Selector]
+        Deltas = self.delta_shot[C_Selector]
+        Psis = self.psi_shot[C_Selector]
         WL = self.WLarray
         
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
@@ -233,9 +233,9 @@ class lambdaVarEllimaps:
 
     def plotAllShots(self, C_Selector = 0):
             
-        idx = self.n_clustersList[C_Selector]
-        Deltas = self.all_DeltaShots
-        Psis = self.all_PsiShots
+        idx = self.n_clustersList_shuffled[C_Selector]
+        Deltas = self.delta_shot
+        Psis = self.psi_shot
         WL = self.WLarray
         
         fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,5))
