@@ -30,7 +30,7 @@ class lambdaVarEllimaps:
         self.readdatFile()  # reads the .dat file using pandas, intantiating:
             #self.datatable: no further use
             #self.WLarray: numpy array with a list of wavelengths used in the measurement
-            #self.indices: list of indices of WLarray. Used later for the map index selector
+            #self.WLIndices: list of indices of WLarray. Used later for the map index selector
             #self.WLdict: dict with indices as keys and WL as values. For later use as reference in plots
             #self.nWL: just for easy retrieving the number of WL (number of maps) in the measurement
             #self.DeltaFileList: a list of file paths of the delta maps for the measurement. 
@@ -82,6 +82,9 @@ class lambdaVarEllimaps:
         self.dim2all = self.AllShuffledStack.shape[1]
         self.dim3all = self.AllShuffledStack.shape[2]
         self.AllShuffledStackReshaped = self.AllShuffledStack.reshape(self.dim1all*self.dim2all, self.dim3all)
+        self.AllIndices = np.arange(self.dim3all)
+        self.DeltaIndices = [x for x in self.AllIndices if x%2 == 0]
+        self.PsiIndices = [x + 1 for x in self.AllIndices if x%2 == 0]
     
     def getEstimation(self, k=(2,11), metric = 'distortion'):
         
@@ -107,41 +110,49 @@ class lambdaVarEllimaps:
         
         visualizer.show()
         
-    def clusterize(self, ks = 5):
+    def clusterize(self, k = 5):
         
-        self.n_clustersList_shuffled = np.arange(ks)
+        self.n_clustersList_shuffled = np.arange(k) # List to serve as index for the clusters
         
-        kmeans = KMeans(n_clusters = ks, random_state = 0).fit(self.AllShuffledStackReshaped)
+        kmeans = KMeans(n_clusters = k, random_state = 0).fit(self.AllShuffledStackReshaped)
         
         segmented = kmeans.cluster_centers_[kmeans.labels_]
         
-        segmentedShuffledStack = segmented.reshape(self.dim1, self.dim2, self.dim3all)
+        segmentedShuffledStack = segmented.reshape(self.dim1all, self.dim2all, self.dim3all)
         
         self.segmented = segmented
         self.segmentedShuffledStack = segmentedShuffledStack
         self.cluster_centers_ = kmeans.cluster_centers_
         self.cluster_labels_ = kmeans.labels_
         
-    def clustershot_shufflestack(self):
-        self.firstSegmentedDeltamap = self.segmentedDeltaStack[:,:,0]
+    def clustershot(self):
+        self.firstSegmentedDeltamap = self.segmentedShuffledStack[:,:,0]
         #first segmented Deltamap is used to identify position of clustered pixels. 
         #It could be any map, as here in the shuffled stack all clusters will always overlap along the 3rd axis        
         
-        all_Shots = []
+        delta_shot = []
+        psi_shot = []
         
         for cluster_idx in self.n_clustersList_shuffled:
             
             C_ = np.unique(self.firstSegmentedDeltamap)[cluster_idx] #selects one value from unique values in first map
             C_ys, C_xs = np.where(self.firstSegmentedDeltamap==C_) #identifies position of all pixels with that value in the map
         
-            C_pixelshot = []
+            D_pixelshot = []
+            P_pixelshot = []
 
-            for wl in self.indices:
-                Dpxval = np.unique(self.segmentedShuffledStack[C_ys,C_xs,wl])
-                C_pixelshot.append(Dpxval[0]) # the [0] here is just to append the float and not the array [float]
-            all_Shots.append(C_pixelshot)
+            for ellimap in self.DeltaIndices:
+                Dpxval = np.unique(self.segmentedShuffledStack[C_ys,C_xs,ellimap])
+                D_pixelshot.append(Dpxval[0]) # the [0] here is just to append the float and not the array [float] that np.unique generates
+            delta_shot.append(D_pixelshot)
             
-        self.all_Shots = all_Shots
+            for ellimap in self.PsiIndices:
+                Dpxval = np.unique(self.segmentedShuffledStack[C_ys,C_xs,ellimap])
+                P_pixelshot.append(Dpxval[0]) # the [0] here is just to append the float and not the array [float] that np.unique generates
+            psi_shot.append(P_pixelshot)
+            
+        self.delta_shot = delta_shot
+        self.psi_shot = psi_shot
     
     def pickonefromstack(self, imstack, idxSelector = 0):
         #probably unnecessary, as it can be replaced by imstack[:,:,idxSelector]
