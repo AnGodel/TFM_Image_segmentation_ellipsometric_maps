@@ -50,11 +50,11 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
   - the goal here is to somehow apply a "mask" in the original map stack before segmenting, so that an  area if interest can be "cropped" and selected for a traditional pixel by pixel fitting. 
     - This is something that can be done manually with DataStudio, which is quite tedious.
   
-- [ ] Plotting To-Do´s:
+- [x] Plotting To-Do´s:
   - [x] include bar plot of the segmented maps, as in the test notebook. It gives a fast visualization of how much the cluster values are overlapping, which might be an indication that the clustering would work also with less clusters.
-  - [ ] include plot of selected cluster overlapped with plot of standard map (imshow())
+  - [x] include plot of selected cluster overlapped with plot of standard map (imshow())
   - [x] correct position of fig title in cluster shot
-  - [ ] include legend in cluster shot plot
+  - [x] ~~include legend in cluster shot plot~~ Not really necessary, as cluster index is already shown in fig title.
   
 - [x] ~~empaquetar el modo "manual" de sacar el "cluster pixel shot" encontrado en el notebook usando np.where and np.unique~~
 

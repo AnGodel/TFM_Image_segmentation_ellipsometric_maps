@@ -18,7 +18,7 @@ import pandas as pd
 
 class lambdaVarEllimaps:
     
-    def __init__(self, path = None, ):
+    def __init__(self, path = None):
         
         if path is None:
             raise ValueError('Please enter a valid path to folder containing maps from lambda variation measurement')
@@ -273,9 +273,51 @@ class lambdaVarEllimaps:
                 color='red')
         ax1.set_title('Delta clusters values and their pixel counts')
         fig.suptitle('Map index: {}: Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), y = 1.05)
+        ax2.clear
         ax2.bar(P_Cvalues, P_Ccounts, 
                 edgecolor='green', 
                 linewidth=2.5, 
                 width=P_varwidth,
                 color='blue')
         ax2.set_title('Psi clusters values and their pixel counts')
+    
+    def plotClusterOverMaps(self, C_Selector = 0, idxSelector = 0):
+        
+        Dmap = self.AllShuffledStack[:,:,self.DeltaIndices[idxSelector]]
+        Pmap = self.AllShuffledStack[:,:,self.PsiIndices[idxSelector]]
+        DSegmap = self.segmentedShuffledStack[:,:,self.DeltaIndices[idxSelector]]
+        PSegmap = self.segmentedShuffledStack[:,:,self.PsiIndices[idxSelector]]
+        
+        C_ys, C_xs = self.cluster_coordinates[C_Selector]
+        
+        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2,ncols=2, figsize=(12,16))
+        fig.tight_layout(pad=3)
+        fig.suptitle('Cluster {} at Wavelength {}, {} nm'.format(C_Selector, 
+                                                                 idxSelector,
+                                                                 self.WLdict[idxSelector]),
+                    y = 1.02)
+        plt.ylim(ymin=self.dim1all, ymax=0)
+        plt.xlim(xmin=0, xmax=self.dim2all)
+        ax1.clear
+        ax1.imshow(Dmap, cmap='gray')
+        ax1.set_title('Raw Delta map')
+        ax1.scatter(C_xs, C_ys, s=5, color='pink')
+        ax1.grid(False)
+        
+        ax2.clear
+        ax2.imshow(Pmap, cmap='gray')
+        ax2.set_title('Raw Psi map')
+        ax2.scatter(C_xs, C_ys, s=5, color='pink')
+        ax2.grid(False)
+        
+        ax3.clear
+        ax3.grid(False)
+        ax3.imshow(DSegmap, cmap='viridis')
+        ax3.set_title('Segmented Delta map')
+        ax3.scatter(C_xs, C_ys, s=5, color='pink')
+        
+        ax4.clear
+        ax4.imshow(PSegmap, cmap='viridis')
+        ax4.set_title('Segmented Psi map')
+        ax4.scatter(C_xs, C_ys, s=5, color='pink')
+        ax4.grid(False)
