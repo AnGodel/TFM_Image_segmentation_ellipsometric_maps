@@ -250,3 +250,32 @@ class lambdaVarEllimaps:
         for C_Selector in self.n_clustersList_shuffled:
             ax1.plot(self.WLarray, Deltas[C_Selector], alpha=0.7)
             ax2.plot(self.WLarray, Psis[C_Selector], alpha=0.7)
+    
+    def plotBarSegmentedMap(self, idxSelector = 0):
+        Dmap = self.segmentedShuffledStack[:,:,self.DeltaIndices[idxSelector]]
+        Pmap = self.segmentedShuffledStack[:,:,self.PsiIndices[idxSelector]]
+
+        D_Cvalues, D_Ccounts = np.unique(Dmap, return_counts = True)
+        P_Cvalues, P_Ccounts = np.unique(Pmap, return_counts = True)
+
+        D_varwidth = (D_Cvalues.max() - D_Cvalues.min())/20
+        P_varwidth = (P_Cvalues.max() - P_Cvalues.min())/20
+
+
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,5))
+        fig.tight_layout()
+
+        ax1.clear
+        ax1.bar(D_Cvalues, D_Ccounts, 
+                edgecolor='green',
+                linewidth=2.5, 
+                width=D_varwidth,
+                color='red')
+        ax1.set_title('Delta clusters values and their pixel counts')
+        fig.suptitle('Map index: {}: Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), y = 1.05)
+        ax2.bar(P_Cvalues, P_Ccounts, 
+                edgecolor='green', 
+                linewidth=2.5, 
+                width=P_varwidth,
+                color='blue')
+        ax2.set_title('Psi clusters values and their pixel counts')
