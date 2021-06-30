@@ -175,7 +175,7 @@ class lambdaVarEllimaps:
                      shrink=0.5, 
                      location='left',
                      pad=0.048)
-        fig.suptitle('Map index: {}: Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]))
+        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]))
         ax2.clear
         arrR2 = ax2.imshow(imPsi, cmap = 'gray')
         ax2.grid(b=None)
@@ -202,7 +202,7 @@ class lambdaVarEllimaps:
                      shrink=0.5, 
                      location='left',
                      pad=0.048)
-        fig.suptitle('Map index: {}: Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]))
+        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]))
         ax2.clear
         arrC2 = ax2.imshow(imPsi, cmap = 'viridis')
         ax2.grid(b=None)
@@ -251,7 +251,7 @@ class lambdaVarEllimaps:
             ax1.plot(self.WLarray, Deltas[C_Selector], alpha=0.7)
             ax2.plot(self.WLarray, Psis[C_Selector], alpha=0.7)
     
-    def plotBarSegmentedMap(self, idxSelector = 0):
+    def plotBarSegmentedMap(self, C_Selector = 0, idxSelector = 0):
         Dmap = self.segmentedShuffledStack[:,:,self.DeltaIndices[idxSelector]]
         Pmap = self.segmentedShuffledStack[:,:,self.PsiIndices[idxSelector]]
 
@@ -260,7 +260,8 @@ class lambdaVarEllimaps:
 
         D_varwidth = (D_Cvalues.max() - D_Cvalues.min())/20
         P_varwidth = (P_Cvalues.max() - P_Cvalues.min())/20
-
+        SelectedDval = self.delta_shot[C_Selector][self.WLIndices[idxSelector]]
+        SelectedPVal = self.psi_shot[C_Selector][self.WLIndices[idxSelector]]
 
         fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,5))
         fig.tight_layout()
@@ -271,14 +272,18 @@ class lambdaVarEllimaps:
                 linewidth=2.5, 
                 width=D_varwidth,
                 color='red')
+        ax1.axvline(x=SelectedDval, color='black', label='cluster {} at {}'.format(C_Selector, SelectedDval))
+        ax1.legend()
         ax1.set_title('Delta clusters values and their pixel counts')
-        fig.suptitle('Map index: {}: Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), y = 1.05)
+        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), y = 1.05)
         ax2.clear
         ax2.bar(P_Cvalues, P_Ccounts, 
                 edgecolor='green', 
                 linewidth=2.5, 
                 width=P_varwidth,
                 color='blue')
+        ax2.axvline(x=SelectedPVal, color='black', label='cluster {} at {}'.format(C_Selector, SelectedPVal))
+        ax2.legend()
         ax2.set_title('Psi clusters values and their pixel counts')
     
     def plotClusterOverMaps(self, C_Selector = 0, idxSelector = 0):
