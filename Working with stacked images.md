@@ -40,8 +40,8 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
   - ~~probably it will work just fine considering that:~~
     - ~~in traditional nulling maps the maps are identified by only a rolling number which starts with 001, being the first delta always the 001 and the first psi always the 002. That means that in our map stacsk, the deltas will have even idexes (0, 2, 4...) and psis will have odd idexes (1,3,5...)~~
     - ~~in RCE the files will be identified with either "Delta" or "Psi" but there will be only one rolling number for each pair. We need to see how this will affect the script but for now we will focus in the traditional nulling maps.~~
-  - Done. Now the class has an atribute which is an array the wavelengths of the experiment. 
-    - Error handling included: an error message will raise in case the number of wavelengths from the .dat file does not match the number of maps in the folder or in case there is more than one .dat file in the folder
+  - Done. Now the class has an attribute which is an array the wavelengths of the experiment. 
+    - ~~Error handling included: an error message will raise in case the number of wavelengths from the .dat file does not match the number of maps in the folder or in case there is more than one .dat file in the folder~~ Obsolete. Now error raises in case there is more than one .dat file in the folder.
   
 - [x] ~~extract the delta and psi vs. wavelength from the segmented stack. This will be one of the final goals of the project, since those data will be already "fittable" with Accurion's model software to extract more accurate thickness map (in a single map) than the current interpolation mode.~~ 
   - Done
@@ -53,25 +53,27 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
 - [ ] Plotting To-Do´s:
   - [ ] include bar plot of the segmented maps, as in the test notebook. It gives a fast visualization of how much the cluster values are overlapping, which might be an indication that the clustering would work also with less clusters.
   - [ ] include plot of selected cluster overlapped with plot of standard map (imshow())
-  - [ ] correct position of fig title in cluster shot
+  - [x] correct position of fig title in cluster shot
   - [ ] include legend in cluster shot plot
   
 - [x] ~~empaquetar el modo "manual" de sacar el "cluster pixel shot" encontrado en el notebook usando np.where and np.unique~~
 
-- [x] IMPORTANT: check if there are more than one psi values retrieved when doing the cluster shot taking the Cy, Cx positions from the first delta map. Probably good to double-check this also in delta maps and using other example datasets.
+- [x] ~~IMPORTANT: check if there are more than one psi values retrieved when doing the cluster shot taking the Cy, Cx positions from the first delta map. Probably good to double-check this also in delta maps and using other example datasets.~~
 
-  - OK... As expected, there are more than one value in the Psi maps when doing the cluster shot with the coordinates of a Delta map. Funny thing is that the values for the Delta shot are single values. Which means I just need to figure out how to match the (Delta,Psi) values for each cluster and then run the psi shot with coordinates from the first Psi map. Maybe running the clustering in a "shuffled" Delta-Psi stack would solve this problem?
+  - ~~OK... As expected, there are more than one value in the Psi maps when doing the cluster shot with the coordinates of a Delta map. Funny thing is that the values for the Delta shot are single values. Which means I just need to figure out how to match the (Delta,Psi) values for each cluster and then run the psi shot with coordinates from the first Psi map. Maybe running the clustering in a "shuffled" Delta-Psi stack would solve this problem?~~
 
-  - Another option could be to append just the mean when multiple values are found.
+    - INDEED! I had to figure out how to "shuffle" the delta and psi maps in the right order from the file lists given by the .dat file. But from there on, everything was easier. Running the clustering in the shuffled stack makes the trick, as all labels (pixel coordinates) for the clusters will match and the cluster shot retrieves single values from each map. 
 
-    - This could be implemented using np.unique(return_counts=True), as done in the test notebook:
+  - ~~Another option could be to append just the mean when multiple values are found.~~
+
+    - ~~This could be implemented using np.unique(return_counts=True), as done in the test notebook:~~
 
       - ```python
         u, counts = np.unique(testtest, return_counts=True)
         np.mean(np.repeat(u,counts))
         ```
 
-      It is probably the easiest way to continue at this point, since everything is already working as needed. With this weighted mean the error introduced will be minimized. A test with the "shuffled" stack is probably mandatory too before proceeding, despite it can be time consuming. 
+      ~~It is probably the easiest way to continue at this point, since everything is already working as needed. With this weighted mean the error introduced will be minimized. A test with the "shuffled" stack is probably mandatory too before proceeding, despite it can be time consuming.~~ 
 
 - [ ] export cluster shot data to pandas dataframe and then to a file which is loadable into Accurio's DataStudio. 
   - This should include Cy, Cx for each cluster, so that a "thickness" image can be rebuilt when the data for each cluster are fitted into the model. (this is a post-project idea, of course)

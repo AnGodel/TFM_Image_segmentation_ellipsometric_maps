@@ -44,7 +44,7 @@ class lambdaVarEllimaps:
             # self.AllShuffledStack: the stack of shuffled maps
             # self.AllShuffledStackReshaped: the reshaped stack ready for being passed to KMeans algorithm
             # self.dim1all, self.dim2all, self.dim3all: dimensions of the stack, being dim3 nWL*2
-
+        self.clusterize() # runs first sementation with k=5 automatically
     def getdatFile(self):
 
         datFile = glob.glob(self.path + '/*.ds.dat')
@@ -111,6 +111,7 @@ class lambdaVarEllimaps:
         visualizer.show()
         
     def clusterize(self, k = 5):
+        print('Segmenting maps into {} clusters'.format(k))
         
         self.n_clustersList_shuffled = np.arange(k) # List to serve as index for the clusters
         
@@ -124,20 +125,21 @@ class lambdaVarEllimaps:
         self.segmentedShuffledStack = segmentedShuffledStack
         self.cluster_centers_ = kmeans.cluster_centers_
         self.cluster_labels_ = kmeans.labels_
+        print('Finished segmentation')
         
     def clustershot(self):
         self.firstSegmentedDeltamap = self.segmentedShuffledStack[:,:,0]
-        #first segmented Deltamap is used to identify position of clustered pixels. 
-        #It could be any map, as here in the shuffled stack all clusters will always overlap along the 3rd axis        
+        #  first segmented Deltamap is used to identify position of clustered pixels. 
+        #  It could be any map, as here in the shuffled stack all clusters will always overlap along the 3rd axis        
         
-        delta_shot = [] # each row is a  cluster shot of delta values
-        psi_shot = [] # each row is a cluster shot of psi values
-        
+        delta_shot = [] #  each row is a  cluster shot of delta values
+        psi_shot = [] #  each row is a cluster shot of psi values
+        cluster_coordinates = []
         for cluster_idx in self.n_clustersList_shuffled:
             
-            C_ = np.unique(self.firstSegmentedDeltamap)[cluster_idx] #selects one value from unique values in first map
-            C_ys, C_xs = np.where(self.firstSegmentedDeltamap==C_) #identifies position of all pixels with that value in the map
-        
+            C_ = np.unique(self.firstSegmentedDeltamap)[cluster_idx] #  selects one value from unique values in first map
+            C_ys, C_xs = np.where(self.firstSegmentedDeltamap == C_) #  identifies position of all pixels with that value in the map
+            cluster_coordinates.append((C_ys, C_xs))
             D_pixelshot = [] # single cluster shot in the delta maps of the stack
             P_pixelshot = [] # single cluster shot in the psi maps of the stack
 
@@ -153,6 +155,7 @@ class lambdaVarEllimaps:
             
         self.delta_shot = delta_shot
         self.psi_shot = psi_shot
+        self.cluster_coordinates = cluster_coordinates
     
     def plotDeltaPsi(self, idxSelector = 0):
         
@@ -219,16 +222,12 @@ class lambdaVarEllimaps:
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
         fig.tight_layout()
         
-        
         ax1.clear
         ax1.plot(self.WLarray, Deltas, color = 'red')
         ax1.set_title('Delta')
-        ax1.grid(b=None)
-        
-        fig.suptitle('Cluster index: {}'.format(C_Selector))
+        fig.suptitle('Cluster index: {}'.format(C_Selector), y=1.05)
         ax2.clear
         ax2.plot(self.WLarray, Psis, color = 'blue')
-        ax2.grid(b=None)
         ax2.set_title('Psi')
 
     def plotAllShots(self, C_Selector = 0):
@@ -241,17 +240,13 @@ class lambdaVarEllimaps:
         fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,5))
         fig.tight_layout()
         
-        
         ax1.clear
-        for C_Selector in self.n_clustersList:
-            ax1.plot(self.WLarray, Deltas[C_Selector], alpha=0.7)
         ax1.scatter(self.WLarray, Deltas[C_Selector], color='red')
         ax1.set_title('Delta')
-        ax1.grid(b=None)
-        
-        fig.suptitle('Cluster index: {}'.format(C_Selector))
-        for C_Selector in self.n_clustersList:
-            ax2.plot(self.WLarray, Psis[C_Selector], alpha=0.7)
+        fig.suptitle('Cluster index: {}'.format(C_Selector), y=1.05)
+        ax2.clear
         ax2.scatter(self.WLarray, Psis[C_Selector], color='blue')
-        ax2.grid(b=None)
         ax2.set_title('Psi')
+        for C_Selector in self.n_clustersList_shuffled:
+            ax1.plot(self.WLarray, Deltas[C_Selector], alpha=0.7)
+            ax2.plot(self.WLarray, Psis[C_Selector], alpha=0.7)
