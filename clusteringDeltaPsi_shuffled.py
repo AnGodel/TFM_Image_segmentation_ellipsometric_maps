@@ -7,6 +7,7 @@ Created on Mon Jun 14 11:02:14 2021
 
 import glob
 import os
+import time
 import numpy as np
 from nanofilm.ndimage import imread
 import elliPack.astroclean as at
@@ -75,7 +76,8 @@ class lambdaVarEllimaps:
             self.AllFileList.append(item2)
         
     def loadAllMaps(self):
-        
+        start = time.perf_counter()
+        print('Loading and preprocessing maps...')
         AllMaps = list(map(at.loadmap_astroclean, self.AllFileList))
         self.AllShuffledStack = np.dstack(AllMaps)
         self.dim1all = self.AllShuffledStack.shape[0]
@@ -85,9 +87,13 @@ class lambdaVarEllimaps:
         self.AllIndices = np.arange(self.dim3all)
         self.DeltaIndices = [x for x in self.AllIndices if x%2 == 0]
         self.PsiIndices = [x + 1 for x in self.AllIndices if x%2 == 0]
+        
+        stop = time.perf_counter()
+        print(f'{self.dim3all} maps loaded in {stop - start:0.4f} seconds')
     
     def getEstimation(self, k=(2,11), metric = 'distortion'):
-        
+        start = time.perf_counter()
+        print('Getting estimation and metrics with Distortion method')
         model = KMeans(random_state=0)
         
         visualizer = KElbowVisualizer(model, 
@@ -96,11 +102,13 @@ class lambdaVarEllimaps:
         visualizer.fit(self.AllShuffledStackReshaped)
         
         visualizer.show()
-    
+        stop = time.perf_counter()
+        print(f'Finished estimation in {stop - start:0.4f} seconds')
     #Having the two estimator visualizers in the same function makes the second estimator fail, somehow
     
     def getEstimation2(self, k=(2,11), metric = 'calinski_harabasz'):
-        
+        start = time.perf_counter()
+        print('Getting estimation and metrics with Calinski-Harabasz method')
         model = KMeans(random_state=0)
         
         visualizer = KElbowVisualizer(model, 
@@ -109,8 +117,11 @@ class lambdaVarEllimaps:
         visualizer.fit(self.AllShuffledStackReshaped)
         
         visualizer.show()
+        stop = time.perf_counter()
+        print(f'Finished estimation in {stop - start:0.4f} seconds')
         
     def clusterize(self, k = 5):
+        start = time.perf_counter()
         print('Segmenting maps into {} clusters'.format(k))
         
         self.n_clustersList_shuffled = np.arange(k) # List to serve as index for the clusters
@@ -125,7 +136,10 @@ class lambdaVarEllimaps:
         self.segmentedShuffledStack = segmentedShuffledStack
         self.cluster_centers_ = kmeans.cluster_centers_
         self.cluster_labels_ = kmeans.labels_
-        print('Finished segmentation')
+        print('Extracting numerical values for each cluster along map stacks...')
+        self.clustershot()
+        stop = time.perf_counter()
+        print(f'Finished segmentation in {stop - start:0.4f} seconds')
         
     def clustershot(self):
         self.firstSegmentedDeltamap = self.segmentedShuffledStack[:,:,0]
@@ -297,10 +311,10 @@ class lambdaVarEllimaps:
         
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2,ncols=2, figsize=(12,16))
         fig.tight_layout(pad=3)
-        fig.suptitle('Cluster {} at Wavelength {}, {} nm'.format(C_Selector, 
-                                                                 idxSelector,
-                                                                 self.WLdict[idxSelector]),
-                    y = 1.02)
+        # #fig.suptitle('Cluster {} at Wavelength {}, {} nm'.format(C_Selector, 
+        #                                                          idxSelector,
+        #                                                          self.WLdict[idxSelector]),
+        #             y = 1.02)
         plt.ylim(ymin=self.dim1all, ymax=0)
         plt.xlim(xmin=0, xmax=self.dim2all)
         ax1.clear
@@ -315,6 +329,10 @@ class lambdaVarEllimaps:
         ax2.scatter(C_xs, C_ys, s=5, color='pink')
         ax2.grid(False)
         
+        fig.suptitle('Cluster {} at Wavelength {}, {} nm'.format(C_Selector, 
+                                                                 idxSelector,
+                                                                 self.WLdict[idxSelector]),
+                    y = 1)
         ax3.clear
         ax3.grid(False)
         ax3.imshow(DSegmap, cmap='viridis')
