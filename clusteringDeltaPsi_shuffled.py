@@ -46,6 +46,7 @@ class lambdaVarEllimaps:
             # self.AllShuffledStackReshaped: the reshaped stack ready for being passed to KMeans algorithm
             # self.dim1all, self.dim2all, self.dim3all: dimensions of the stack, being dim3 nWL*2
         self.clusterize() # runs first sementation with k=5 automatically
+        
     def getdatFile(self):
 
         datFile = glob.glob(self.path + '/*.ds.dat')
@@ -80,9 +81,7 @@ class lambdaVarEllimaps:
         print('Loading and preprocessing maps...')
         AllMaps = list(map(at.loadmap_astroclean, self.AllFileList))
         self.AllShuffledStack = np.dstack(AllMaps)
-        self.dim1all = self.AllShuffledStack.shape[0]
-        self.dim2all = self.AllShuffledStack.shape[1]
-        self.dim3all = self.AllShuffledStack.shape[2]
+        self.dim1all, self.dim2all, self.dim3all = self.AllShuffledStack.shape
         self.AllShuffledStackReshaped = self.AllShuffledStack.reshape(self.dim1all*self.dim2all, self.dim3all)
         self.AllIndices = np.arange(self.dim3all)
         self.DeltaIndices = [x for x in self.AllIndices if x%2 == 0]
