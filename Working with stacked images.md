@@ -75,7 +75,7 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
 
       ~~It is probably the easiest way to continue at this point, since everything is already working as needed. With this weighted mean the error introduced will be minimized. A test with the "shuffled" stack is probably mandatory too before proceeding, despite it can be time consuming.~~ 
 
-- [ ] export cluster shot data to pandas dataframe and then to a file which is loadable into Accurio's DataStudio. 
+- [x] export cluster shot data to pandas dataframe and then to a file which is loadable into Accurion's DataStudio. 
   - This should include Cy, Cx for each cluster, so that a "thickness" image can be rebuilt when the data for each cluster are fitted into the model. (this is a post-project idea, of course)
   
 - [ ] EXPLORE FRONT-END OPTIONS WITH STREAM-LIT!!

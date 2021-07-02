@@ -310,10 +310,7 @@ class lambdaVarEllimaps:
         
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2,ncols=2, figsize=(12,16))
         fig.tight_layout(pad=3)
-        # #fig.suptitle('Cluster {} at Wavelength {}, {} nm'.format(C_Selector, 
-        #                                                          idxSelector,
-        #                                                          self.WLdict[idxSelector]),
-        #             y = 1.02)
+        
         plt.ylim(ymin=self.dim1all, ymax=0)
         plt.xlim(xmin=0, xmax=self.dim2all)
         ax1.clear
@@ -343,3 +340,45 @@ class lambdaVarEllimaps:
         ax4.set_title('Segmented Psi map')
         ax4.scatter(C_xs, C_ys, s=5, color='pink')
         ax4.grid(False)
+    
+    def createDFfromClustershot(self):
+        
+        df = pd.DataFrame(list(zip(self.WLIndices,self.WLarray)))
+        df.columns = ['WL_idx','WL']
+        for i, inlist in enumerate(self.delta_shot):
+            columnname = 'delta_cluster_{}'.format(i)
+            Dcolumn = pd.Series(inlist, name=columnname)
+            df = df.join(Dcolumn)
+        for i, inlist in enumerate(self.psi_shot):
+            columnname = 'psi_cluster_{}'.format(i)
+            Pcolumn = pd.Series(inlist, name=columnname)
+            df = df.join(Pcolumn)
+            
+        self.DFshot = df
+    
+    def createDFcoordinates(self):
+        
+        df = pd.DataFrame(np.arange(len(self.cluster_coordinates[0][0])))
+        df.columns = ['pixel_idx']
+        #if df is empty it is not possible to add Series as columns using join
+        for i, tupla in enumerate(self.cluster_coordinates):
+            colItem0 = 'Cys_cluster_{}'.format(i)
+            colItem1 = 'Cxs_cluster_{}'.format(i)
+            Ycolumn = pd.Series(tupla[0],name=colItem0)
+            df = df.join(Ycolumn)
+            Xcolumn = pd.Series(tupla[1],name=colItem1)
+            df = df.join(Xcolumn)
+        
+        self.DFcoordinates = df
+        
+    def exportDFs(self):
+        
+        self.createDFcoordinates()
+        self.createDFfromClustershot()
+        
+        basefilename = os.path.basename(self.datFile).split('.')[0]
+        coordFile = os.path.join(self.path, basefilename + '_coordinates.dat')
+        clustershotFile = os.path.join(self.path, basefilename + '_clustershot.dat')
+        
+        self.DFcoordinates.to_csv(coordFile)
+        self.DFshot.to_csv(clustershotFile)
