@@ -104,6 +104,7 @@ class lambdaVarEllimaps:
         stop = time.perf_counter()
         print(f'Finished estimation in {stop - start:0.4f} seconds')
     #Having the two estimator visualizers in the same function makes the second estimator fail, somehow
+        return visualizer.show()
     
     def getEstimation2(self, k=(2,11), metric = 'calinski_harabasz'):
         start = time.perf_counter()
@@ -197,6 +198,8 @@ class lambdaVarEllimaps:
                      ax=ax2, 
                      shrink=0.5, 
                      location='right')
+        
+        return fig
     
     def plotSegmentedDeltaPsi(self, idxSelector = 0):
         
@@ -224,6 +227,8 @@ class lambdaVarEllimaps:
                      ax=ax2, 
                      shrink=0.5, 
                      location='right')
+        
+        return fig
     
     def plotOneShot(self, C_Selector = 0):
         
@@ -242,6 +247,8 @@ class lambdaVarEllimaps:
         ax2.clear
         ax2.plot(self.WLarray, Psis, color = 'blue')
         ax2.set_title('Psi')
+        
+        return fig
 
     def plotAllShots(self, C_Selector = 0):
             
@@ -263,6 +270,8 @@ class lambdaVarEllimaps:
         for C_Selector in self.n_clustersList_shuffled:
             ax1.plot(self.WLarray, Deltas[C_Selector], alpha=0.7)
             ax2.plot(self.WLarray, Psis[C_Selector], alpha=0.7)
+        
+        return fig
     
     def plotBarSegmentedMap(self, C_Selector = 0, idxSelector = 0):
         Dmap = self.segmentedShuffledStack[:,:,self.DeltaIndices[idxSelector]]
@@ -298,6 +307,8 @@ class lambdaVarEllimaps:
         ax2.axvline(x=SelectedPVal, color='black', label='cluster {} at {}'.format(C_Selector, SelectedPVal))
         ax2.legend()
         ax2.set_title('Psi clusters values and their pixel counts')
+        
+        return fig
     
     def plotClusterOverMaps(self, C_Selector = 0, idxSelector = 0):
         
@@ -340,6 +351,8 @@ class lambdaVarEllimaps:
         ax4.set_title('Segmented Psi map')
         ax4.scatter(C_xs, C_ys, s=5, color='pink')
         ax4.grid(False)
+        
+        return fig
     
     def createDFfromClustershot(self):
         
