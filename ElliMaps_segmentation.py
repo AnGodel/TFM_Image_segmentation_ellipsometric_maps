@@ -19,8 +19,18 @@ if folderinput:
 
     currentExp = lve('F:\example_elli-maps_forTFM\Garching-wednesday-hBN__smallset-withNaNs-goodforquicktest')
     
-st.markdown('Estimation with Distortion method')
-st.write(currentExp.getEstimation())
+st.sidebar.slider('Select the number of clusters for the segmentation of your maps:',
+                  min_value=0,
+                  max_value=15,
+                  value=5)
+C_max = int(currentExp.n_clustersList_shuffled[-1])
+st.sidebar.slider('Select the cluster to display',
+                  min_value=0,
+                  max_value=C_max,
+                  value=0)
+    
+# st.markdown('Estimation with Distortion method')
+# st.write(currentExp.getEstimation())
 
 st.markdown('Segmented maps:')
     
