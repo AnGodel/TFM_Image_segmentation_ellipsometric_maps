@@ -80,3 +80,14 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
   
 - [ ] EXPLORE FRONT-END OPTIONS WITH STREAM-LIT!!
 
+  - [x] wait for input folder before anything continues?
+  - [ ] .getEstimation will not show. Introduce param. to export estimation graph as .png and then load it into the streamlit app?
+  - [x] define selector sliders in the sidebar: 
+    - [x] C_Selector
+    - [x] idx_selector for WL
+    - [ ] define what happens when selected value in the slider changes
+  - [x] define buttons or other kind of selector box for the image to display
+  - [ ] add info texts at the sidebar (?) with .dat file name (experiment name), number of maps and their size, number of WL, and time taken for the preprocessing
+  - [ ] add x-axis label to clustershot plot to display 'Wavelength'
+  - [ ] explore caching options to speed up the whole front-end. In the current status, any changes in any slider or button in the interface will re-instantiate the whole folder, which is not bearable if the folder contains more than a few maps
+

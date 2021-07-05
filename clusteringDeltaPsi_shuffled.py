@@ -25,7 +25,6 @@ class lambdaVarEllimaps:
             raise ValueError('Please enter a valid path to folder containing maps from lambda variation measurement')
         else:
             self.path = path
-            
         self.getdatFile()  # will find the .ds.dat file in the folder. #
         # Instantiates self.datFile
         self.readdatFile()  # reads the .dat file using pandas, intantiating:
