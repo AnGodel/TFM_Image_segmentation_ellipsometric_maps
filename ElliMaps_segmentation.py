@@ -9,7 +9,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from clusteringDeltaPsi_shuffled import lambdaVarEllimaps as lve
-import time
+import os
 
 st.title('Ellipsometric Maps Segmentation Tool')
 
@@ -17,7 +17,7 @@ folderinput = st.text_input('Please enter a path to folder containing the ellips
 
 if folderinput:
     
-    #@st.cache(allow_output_mutation=True)
+    @st.cache(allow_output_mutation=True)
     def instantiate(folder):
         Exp = lve(folder)
         WL_max = int(Exp.WLIndices[-1])
@@ -29,21 +29,37 @@ else:
     st.write('Waiting for folder path...')
 
 #Slider to select the number of clusters for the segmentation (k in clusterize())
-k = st.sidebar.slider('Select the number of clusters for the segmentation of your maps:',
-                  min_value=0,
+k = st.sidebar.number_input('Select the number of clusters for the segmentation of your maps:',
+                  min_value=2,
                   max_value=15,
-                  value=6)
-currentExp.clusterize(k)
+                  step=1,
+                  value=5)
+@st.cache
+def runClusterization(exp, k):
+    expClusterized = exp.clusterize(k)
+    return expClusterized
+def runEstimation(exp):
+    estimation = exp.getEstimation(k=(2,11), metric = 'distortion')
+    return estimation
+
+if st.sidebar.button('Run segmentation'):
+    runClusterization(currentExp, k)
 
 
 #Box to select estimation method
 estimator = st.sidebar.selectbox('Select estimation to display',
                          options=(None, 'Distortion', 'Calinski-Harabasz'))
+basefilename = os.path.basename(currentExp.datFile).split('.')[0]
+
 
 if estimator == 'Distortion':
-    st.write('should display distortion plot')
+    runEstimation(currentExp)
+    distortionFigPath = os.path.join(currentExp.path, basefilename + '_distortionEstimation.png')
+    st.write(distortionFigPath)
 elif estimator == 'Calinski-Harabasz':
-    st.write('should display calinski plot')
+    currentExp.getEstimation2()
+    calinskiFigPath = os.path.join(currentExp.path, basefilename + '_calinskiEstimation.png')
+    st.image(calinskiFigPath)
 else:
     pass
 
@@ -66,6 +82,7 @@ plotdisplaytype = st.sidebar.selectbox('Select the plot to be displayed',
                                                 'Segmented Delta-Psi Maps',
                                                 'Cluster over Raw and Segmented Maps'))
 
+
 if plotdisplaytype == 'Raw Delta-Psi Maps':
     st.write(currentExp.plotDeltaPsi(idxSelector))
 elif plotdisplaytype == 'Segmented Delta-Psi Maps':
@@ -74,13 +91,13 @@ elif plotdisplaytype == 'Cluster over Raw and Segmented Maps':
     st.write(currentExp.plotClusterOverMaps(C_Selector, idxSelector))
 
 #Button to display the clusters bar plot
-if st.sidebar.button('Show cluster bar plot'):
-    st.write(currentExp.plotBarSegmentedMap(C_Selector, idxSelector))
+if st.sidebar.checkbox('Show cluster bar plot'):
+   st.write(currentExp.plotBarSegmentedMap(C_Selector, idxSelector))
 else:
     pass
 
 #Button to display the clustershot Delta-Psi curves
-if st.sidebar.button('Show Delta-Psi curves from clustershot'):
+if st.sidebar.checkbox('Show Delta-Psi curves from clustershot'):
     st.write(currentExp.plotAllShots(C_Selector))
 else:
     pass

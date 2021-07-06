@@ -44,7 +44,7 @@ class lambdaVarEllimaps:
             # self.AllShuffledStack: the stack of shuffled maps
             # self.AllShuffledStackReshaped: the reshaped stack ready for being passed to KMeans algorithm
             # self.dim1all, self.dim2all, self.dim3all: dimensions of the stack, being dim3 nWL*2
-        self.clusterize() # runs first sementation with k=5 automatically
+        #self.clusterize() # runs first sementation with k=5 automatically
         
     def getdatFile(self):
 
@@ -99,11 +99,14 @@ class lambdaVarEllimaps:
                                       metric = metric)
         visualizer.fit(self.AllShuffledStackReshaped)
         
-        visualizer.show()
+        basefilename = os.path.basename(self.datFile).split('.')[0]
+        distortionFigPath = os.path.join(self.path, basefilename + '_distortionEstimation.png')
+        
+        fig = visualizer.show(outpath=distortionFigPath)
         stop = time.perf_counter()
         print(f'Finished estimation in {stop - start:0.4f} seconds')
     #Having the two estimator visualizers in the same function makes the second estimator fail, somehow
-        return visualizer.show()
+        return fig
     
     def getEstimation2(self, k=(2,11), metric = 'calinski_harabasz'):
         start = time.perf_counter()
@@ -115,9 +118,13 @@ class lambdaVarEllimaps:
                                       metric = metric)
         visualizer.fit(self.AllShuffledStackReshaped)
         
-        visualizer.show()
+        basefilename = os.path.basename(self.datFile).split('.')[0]
+        calinskiFigPath = os.path.join(self.path, basefilename + '_calinskiEstimation.png')
+        
+        fig = visualizer.show(outpath=calinskiFigPath)
         stop = time.perf_counter()
         print(f'Finished estimation in {stop - start:0.4f} seconds')
+        return fig
         
     def clusterize(self, k = 5):
         start = time.perf_counter()
@@ -188,7 +195,7 @@ class lambdaVarEllimaps:
                      shrink=0.5, 
                      location='left',
                      pad=0.048)
-        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]))
+        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), y=0.5)
         ax2.clear
         arrR2 = ax2.imshow(imPsi, cmap = 'gray')
         ax2.grid(b=None)
@@ -217,7 +224,7 @@ class lambdaVarEllimaps:
                      shrink=0.5, 
                      location='left',
                      pad=0.048)
-        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]))
+        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), y=1.01)
         ax2.clear
         arrC2 = ax2.imshow(imPsi, cmap = 'viridis')
         ax2.grid(b=None)
