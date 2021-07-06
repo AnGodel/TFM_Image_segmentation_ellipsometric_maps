@@ -49,7 +49,7 @@ else:
 
 
 #Slider to select the cluster idx to be displayed in the plots
-C_max = int(currentExp.n_clustersList_shuffled[-1])
+C_max = int(currentExp.cluster_list[-1])
 C_Selector = st.sidebar.slider('Select the cluster to display',
                   min_value=0,
                   max_value=C_max,

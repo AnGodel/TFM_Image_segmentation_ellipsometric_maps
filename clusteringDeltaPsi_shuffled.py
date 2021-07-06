@@ -123,7 +123,7 @@ class lambdaVarEllimaps:
         start = time.perf_counter()
         print('Segmenting maps into {} clusters'.format(k))
         
-        self.n_clustersList_shuffled = np.arange(k) # List to serve as index for the clusters
+        self.cluster_list = np.arange(k) # List to serve as index for the clusters
         
         kmeans = KMeans(n_clusters = k, random_state = 0).fit(self.AllShuffledStackReshaped)
         
@@ -148,7 +148,7 @@ class lambdaVarEllimaps:
         delta_shot = [] #  each row is a  cluster shot of delta values
         psi_shot = [] #  each row is a cluster shot of psi values
         cluster_coordinates = []
-        for cluster_idx in self.n_clustersList_shuffled:
+        for cluster_idx in self.cluster_list:
             
             C_ = np.unique(self.firstSegmentedDeltamap)[cluster_idx] #  selects one value from unique values in first map
             C_ys, C_xs = np.where(self.firstSegmentedDeltamap == C_) #  identifies position of all pixels with that value in the map
@@ -231,7 +231,7 @@ class lambdaVarEllimaps:
     
     def plotOneShot(self, C_Selector = 0):
         
-        idx = self.n_clustersList_shuffled[C_Selector]
+        idx = self.cluster_list[C_Selector]
         Deltas = self.delta_shot[C_Selector]
         Psis = self.psi_shot[C_Selector]
         WL = self.WLarray
@@ -251,7 +251,7 @@ class lambdaVarEllimaps:
 
     def plotAllShots(self, C_Selector = 0):
             
-        idx = self.n_clustersList_shuffled[C_Selector]
+        idx = self.cluster_list[C_Selector]
         Deltas = self.delta_shot
         Psis = self.psi_shot
         WL = self.WLarray
@@ -266,7 +266,7 @@ class lambdaVarEllimaps:
         ax2.clear
         ax2.scatter(self.WLarray, Psis[C_Selector], color='blue')
         ax2.set_title('Psi')
-        for C_Selector in self.n_clustersList_shuffled:
+        for C_Selector in self.cluster_list:
             ax1.plot(self.WLarray, Deltas[C_Selector], alpha=0.7)
             ax2.plot(self.WLarray, Psis[C_Selector], alpha=0.7)
         
