@@ -119,7 +119,7 @@ class lambdaVarEllimaps:
         visualizer.fit(self.AllShuffledStackReshaped)
         
         basefilename = os.path.basename(self.datFile).split('.')[0]
-        calinskiFigPath = os.path.join(self.path, basefilename + '_calinskiEstimation.png')
+        calinskiFigPath = os.path.join(self.path, basefilename + '_calinskiEstimation.jpg')
         
         fig = visualizer.show(outpath=calinskiFigPath)
         stop = time.perf_counter()
@@ -195,7 +195,7 @@ class lambdaVarEllimaps:
                      shrink=0.5, 
                      location='left',
                      pad=0.048)
-        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), y=0.5)
+        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), y=0.90)
         ax2.clear
         arrR2 = ax2.imshow(imPsi, cmap = 'gray')
         ax2.grid(b=None)

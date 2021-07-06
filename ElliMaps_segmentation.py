@@ -8,6 +8,8 @@ Created on Sun Jul  4 11:10:45 2021
 import streamlit as st
 import numpy as np
 import pandas as pd
+from yellowbrick.cluster.elbow import kelbow_visualizer, KElbowVisualizer
+from sklearn.cluster import KMeans
 from clusteringDeltaPsi_shuffled import lambdaVarEllimaps as lve
 import os
 
@@ -39,8 +41,20 @@ def runClusterization(exp, k):
     expClusterized = exp.clusterize(k)
     return expClusterized
 def runEstimation(exp):
-    estimation = exp.getEstimation(k=(2,11), metric = 'distortion')
-    return estimation
+    estimation_dist = kelbow_visualizer(KMeans(random_state=0), 
+                                        currentExp.AllShuffledStackReshaped, 
+                                        k=11)
+    return estimation_dist
+def getEstimation(exp, k=(2,11), metric = 'distortion'):
+        model = KMeans(random_state=0)
+        
+        visualizer = KElbowVisualizer(model, 
+                                      k=k,
+                                      metric = metric)
+        visualizer.fit(exp.AllShuffledStackReshaped)
+        
+        fig = visualizer.show()
+        return fig
 
 if st.sidebar.button('Run segmentation'):
     runClusterization(currentExp, k)
@@ -53,19 +67,20 @@ basefilename = os.path.basename(currentExp.datFile).split('.')[0]
 
 
 if estimator == 'Distortion':
-    runEstimation(currentExp)
-    distortionFigPath = os.path.join(currentExp.path, basefilename + '_distortionEstimation.png')
-    st.write(distortionFigPath)
+    #getEstimation(currentExp)
+    st.write(getEstimation(currentExp))
 elif estimator == 'Calinski-Harabasz':
-    currentExp.getEstimation2()
-    calinskiFigPath = os.path.join(currentExp.path, basefilename + '_calinskiEstimation.png')
-    st.image(calinskiFigPath)
+    #fig = currentExp.getEstimation2()    
+    # calinskiFigPath = os.path.join(currentExp.path, basefilename + '_calinskiEstimation.jpeg')
+    # fig = plt.imshow(calinskiFigPath)
+    # st.image('F:\example_elli-maps_forTFM\Set1-SiSiO2chip__smallset_perfectquicktest\lambda 380-660nm 7steps scan _Si-SiO2_Chip2-5_20180306101258028_calinskiEstimation.png')
+    pass
 else:
     pass
 
 
 #Slider to select the cluster idx to be displayed in the plots
-C_max = int(currentExp.cluster_list[-1])
+C_max = int(k - 1)
 C_Selector = st.sidebar.slider('Select the cluster to display',
                   min_value=0,
                   max_value=C_max,
