@@ -102,11 +102,11 @@ class lambdaVarEllimaps:
         basefilename = os.path.basename(self.datFile).split('.')[0]
         distortionFigPath = os.path.join(self.path, basefilename + '_distortionEstimation.png')
         
-        fig = visualizer.show(outpath=distortionFigPath)
+        visualizer.show(outpath=distortionFigPath)
         stop = time.perf_counter()
         print(f'Finished estimation in {stop - start:0.4f} seconds')
     #Having the two estimator visualizers in the same function makes the second estimator fail, somehow
-        return fig
+        return visualizer
     
     def getEstimation2(self, k=(2,11), metric = 'calinski_harabasz'):
         start = time.perf_counter()
@@ -121,10 +121,10 @@ class lambdaVarEllimaps:
         basefilename = os.path.basename(self.datFile).split('.')[0]
         calinskiFigPath = os.path.join(self.path, basefilename + '_calinskiEstimation.jpg')
         
-        fig = visualizer.show(outpath=calinskiFigPath)
+        visualizer.show(outpath=calinskiFigPath)
         stop = time.perf_counter()
         print(f'Finished estimation in {stop - start:0.4f} seconds')
-        return fig
+        return visualizer
         
     def clusterize(self, k = 5):
         start = time.perf_counter()
