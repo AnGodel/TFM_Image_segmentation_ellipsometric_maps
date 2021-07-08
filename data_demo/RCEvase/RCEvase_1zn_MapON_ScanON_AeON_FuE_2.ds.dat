@@ -1,8 +1,0 @@
-#AOI	Lambda	Bandwidth	ExposureTime	Delta	Psi
-#deg	nm	nm	us	deg	deg
-44.995	400.0	4.1	52482	RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Delta_0001.png	RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Psi_0001.png
-44.995	500.0	3.9	29445	RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Delta_0002.png	RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Psi_0002.png
-44.995	600.0	3.7	33988	RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Delta_0003.png	RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Psi_0003.png
-49.998	400.0	4.1	51955	RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Delta_0004.png	RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Psi_0004.png
-49.998	500.0	3.9	27706	RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Delta_0005.png	RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Psi_0005.png
-49.998	600.0	3.7	32990	RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Delta_0006.png	RCEvase_1zn_MapON_ScanON_AeON_FuE_2_Psi_0006.png
