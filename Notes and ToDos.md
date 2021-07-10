@@ -55,6 +55,10 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
   - [x] include plot of selected cluster overlapped with plot of standard map (imshow())
   - [x] correct position of fig title in cluster shot
   - [x] ~~include legend in cluster shot plot~~ Not really necessary, as cluster index is already shown in fig title.
+  - [ ] change map plotting functions to remove axis labels and make them more attractive in streamlit
+  - [ ] change size of bar plots
+  - [ ] change size of clustershot plots
+  - [ ] add x-axis label to clustershot plot to display 'Wavelength'
   
 - [x] ~~empaquetar el modo "manual" de sacar el "cluster pixel shot" encontrado en el notebook usando np.where and np.unique~~
 
@@ -77,17 +81,30 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
 
 - [x] export cluster shot data to pandas dataframe and then to a file which is loadable into Accurion's DataStudio. 
   - This should include Cy, Cx for each cluster, so that a "thickness" image can be rebuilt when the data for each cluster are fitted into the model. (this is a post-project idea, of course)
-  
-- [ ] EXPLORE FRONT-END OPTIONS WITH STREAM-LIT!!
+
+- [ ] add histogram or bar-plot of pixel value distribution of raw maps for selected cluster. This would be a nice visual indication of how good or bad the selected number of clusters for the segmentation was
+
+- [x] EXPLORE FRONT-END OPTIONS WITH STREAM-LIT!!
 
   - [x] wait for input folder before anything continues?
-  - [ ] .getEstimation will not show. Introduce param. to export estimation graph as .png and then load it into the streamlit app?
+  - [x] .getEstimation will not show. Introduce param. to export estimation graph as .png and then load it into the streamlit app? -- SOLVED WITH CUSTOM LIBRARY FROM GITHUB ([link](https://github.com/snehankekre/streamlit-yellowbrick))
   - [x] define selector sliders in the sidebar: 
     - [x] C_Selector
     - [x] idx_selector for WL
-    - [ ] define what happens when selected value in the slider changes
+    - [x] define what happens when selected value in the slider changes
   - [x] define buttons or other kind of selector box for the image to display
   - [ ] add info texts at the sidebar (?) with .dat file name (experiment name), number of maps and their size, number of WL, and time taken for the preprocessing
-  - [ ] add x-axis label to clustershot plot to display 'Wavelength'
-  - [ ] explore caching options to speed up the whole front-end. In the current status, any changes in any slider or button in the interface will re-instantiate the whole folder, which is not bearable if the folder contains more than a few maps
+  - [ ] add balloons or progress bar to show time consumed in the executions, specially when instantiating the class and loading the maps and when running the clustering
+  - [ ] add button to export clustershot data
+  - [x] explore caching options to speed up the whole front-end. In the current status, any changes in any slider or button in the interface will re-instantiate the whole folder, which is not bearable if the folder contains more than a few maps -- SOLVED: .clusterize() has been removed from init in class. Now only the instantiation of the class is cached and clusterize() will launch only when pressing a button in streamlit
 
+# LAST THINGS TO DO, in order
+
+1. Test all data sets which will be linked to use the app
+2. Include small set in the repo to be used directly without downloading any extra data
+3. Check other TFMs in order to have a reference for the extension and structure of the memory
+4. Finish pending to-dos in plotting functions and other extras and details in the frontend 
+5. Create .yam file with the environment modules and dependancies and test how that will be installed in a fresh system
+6. Pack streamlit app so that it can be executed with a double-click
+7. Write memory
+8. Expand Readme.md to fit the required format
