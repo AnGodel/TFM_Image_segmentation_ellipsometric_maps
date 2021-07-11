@@ -188,7 +188,7 @@ class lambdaVarEllimaps:
         
         ax1.clear
         arrR1 = ax1.imshow(imDelta, cmap = 'gray')
-        ax1.set_title('Delta')
+        ax1.set_title('Delta', fontsize='xx-large')
         ax1.grid(b=None)
         ax1.set_axis_off()
         fig.colorbar(arrR1, 
@@ -196,12 +196,15 @@ class lambdaVarEllimaps:
                      shrink=0.5, 
                      location='left',
                      pad=0.048)
-        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), y=0.90)
+        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, 
+                                                                 self.WLdict[idxSelector]), 
+                     y=0.90,
+                     fontsize='xx-large')
         ax2.clear
         arrR2 = ax2.imshow(imPsi, cmap = 'gray')
         ax2.grid(b=None)
         ax2.set_axis_off()
-        ax2.set_title('Psi')
+        ax2.set_title('Psi', fontsize='xx-large')
         fig.colorbar(arrR2, 
                      ax=ax2, 
                      shrink=0.5, 
@@ -219,7 +222,7 @@ class lambdaVarEllimaps:
         
         ax1.clear
         arrC1 = ax1.imshow(imDelta, cmap = 'viridis')
-        ax1.set_title('Delta')
+        ax1.set_title('Delta', fontsize='xx-large')
         ax1.grid(b=None)
         ax1.set_axis_off()
         fig.colorbar(arrC1, 
@@ -227,12 +230,14 @@ class lambdaVarEllimaps:
                      shrink=0.5, 
                      location='left',
                      pad=0.048)
-        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), y=1.01)
+        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), 
+                     y=1.01,
+                     fontsize='xx-large')
         ax2.clear
         arrC2 = ax2.imshow(imPsi, cmap = 'viridis')
         ax2.grid(b=None)
         ax2.set_axis_off()
-        ax2.set_title('Psi')
+        ax2.set_title('Psi', fontsize='xx-large')
         fig.colorbar(arrC2, 
                      ax=ax2, 
                      shrink=0.5, 
@@ -247,7 +252,7 @@ class lambdaVarEllimaps:
         Psis = self.psi_shot[C_Selector]
         WL = self.WLarray
         
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
         fig.tight_layout()
         
         ax1.clear
@@ -267,16 +272,32 @@ class lambdaVarEllimaps:
         Psis = self.psi_shot
         WL = self.WLarray
         
-        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,5))
-        fig.tight_layout()
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(20,10))
+        fig.tight_layout(pad=4)
         
         ax1.clear
         ax1.scatter(self.WLarray, Deltas[C_Selector], color='red')
-        ax1.set_title('Delta')
-        fig.suptitle('Cluster index: {}'.format(C_Selector), y=1.05)
+        ax1.set_title('Delta', fontsize='xx-large')
+        ax1.set_xticklabels(self.WLarray,
+                            fontsize='xx-large')
+        ax1.set_yticklabels(Deltas[C_Selector],
+                            fontsize='xx-large')
+        ax1.set_xlabel('Wavelength (nm)', fontsize='xx-large')
+        ax1.xaxis.set_major_formatter(plt.FormatStrFormatter('%.0f'))
+        ax1.yaxis.set_major_formatter(plt.FormatStrFormatter('%.2f'))
+        fig.suptitle('Cluster index: {}'.format(C_Selector),
+                     y=1.05,
+                     fontsize='xx-large')
         ax2.clear
         ax2.scatter(self.WLarray, Psis[C_Selector], color='blue')
-        ax2.set_title('Psi')
+        ax2.set_title('Psi', fontsize='xx-large')
+        ax2.set_xticklabels(self.WLarray,
+                            fontsize='xx-large')
+        ax2.set_yticklabels(Psis[C_Selector],
+                            fontsize='xx-large')
+        ax2.set_xlabel('Wavelength (nm)', fontsize='xx-large')
+        ax2.xaxis.set_major_formatter(plt.FormatStrFormatter('%.0f'))
+        ax2.yaxis.set_major_formatter(plt.FormatStrFormatter('%.2f'))
         for C_Selector in self.cluster_list:
             ax1.plot(self.WLarray, Deltas[C_Selector], alpha=0.7)
             ax2.plot(self.WLarray, Psis[C_Selector], alpha=0.7)
@@ -295,8 +316,8 @@ class lambdaVarEllimaps:
         SelectedDval = self.delta_shot[C_Selector][self.WLIndices[idxSelector]]
         SelectedPVal = self.psi_shot[C_Selector][self.WLIndices[idxSelector]]
 
-        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,5))
-        fig.tight_layout()
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(20,10))
+        fig.tight_layout(pad=4)
 
         ax1.clear
         ax1.bar(D_Cvalues, D_Ccounts, 
@@ -304,19 +325,39 @@ class lambdaVarEllimaps:
                 linewidth=2.5, 
                 width=D_varwidth,
                 color='red')
-        ax1.axvline(x=SelectedDval, color='black', label='cluster {} at {}'.format(C_Selector, SelectedDval))
-        ax1.legend()
-        ax1.set_title('Delta clusters values and their pixel counts')
-        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), y = 1.05)
+        ax1.axvline(x=SelectedDval,
+                    color='black',
+                    label='cluster {} at {}'.format(C_Selector, SelectedDval))
+        ax1.legend(fontsize='xx-large')
+        ax1.set_title('Delta clusters values and their pixel counts', fontsize='xx-large')
+        ax1.set_xticklabels(D_Cvalues,
+                            fontsize='xx-large')
+        ax1.xaxis.set_major_formatter(plt.FormatStrFormatter('%.2f'))
+        ax1.set_yticklabels(D_Ccounts,
+                            fontsize='xx-large')
+        ax1.yaxis.set_major_formatter(plt.FormatStrFormatter('%.0f'))
+        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector,
+                                                                 self.WLdict[idxSelector]
+                                                                 ), 
+                     y = 1.05,
+                     fontsize='xx-large')
         ax2.clear
         ax2.bar(P_Cvalues, P_Ccounts, 
                 edgecolor='green', 
                 linewidth=2.5, 
                 width=P_varwidth,
                 color='blue')
-        ax2.axvline(x=SelectedPVal, color='black', label='cluster {} at {}'.format(C_Selector, SelectedPVal))
-        ax2.legend()
-        ax2.set_title('Psi clusters values and their pixel counts')
+        ax2.axvline(x=SelectedPVal, 
+                    color='black', 
+                    label='cluster {} at {}'.format(C_Selector, SelectedPVal))
+        ax2.legend(fontsize='xx-large')
+        ax2.set_title('Psi clusters values and their pixel counts', fontsize='xx-large')
+        ax2.set_xticklabels(P_Cvalues,
+                            fontsize='xx-large')
+        ax2.xaxis.set_major_formatter(plt.FormatStrFormatter('%.2f'))
+        ax2.set_yticklabels(P_Ccounts,
+                            fontsize='xx-large')
+        ax2.yaxis.set_major_formatter(plt.FormatStrFormatter('%.0f'))
         
         return fig
     

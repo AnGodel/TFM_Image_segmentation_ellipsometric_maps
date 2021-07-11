@@ -55,10 +55,10 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
   - [x] include plot of selected cluster overlapped with plot of standard map (imshow())
   - [x] correct position of fig title in cluster shot
   - [x] ~~include legend in cluster shot plot~~ Not really necessary, as cluster index is already shown in fig title.
-  - [ ] change map plotting functions to remove axis labels and make them more attractive in streamlit
-  - [ ] change size of bar plots
-  - [ ] change size of clustershot plots
-  - [ ] add x-axis label to clustershot plot to display 'Wavelength'
+  - [x] change map plotting functions to remove axis labels and make them more attractive in streamlit
+  - [x] change size of bar plots
+  - [x] change size of clustershot plots
+  - [x] add x-axis label to clustershot plot to display 'Wavelength'
   
 - [x] ~~empaquetar el modo "manual" de sacar el "cluster pixel shot" encontrado en el notebook usando np.where and np.unique~~
 
@@ -97,7 +97,7 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
   - [ ] add info texts at the sidebar (?) with .dat file name (experiment name), number of maps and their size, number of WL, and time taken for the preprocessing
   - [ ] add balloons or progress bar to show time consumed in the executions, specially when instantiating the class and loading the maps and when running the clustering
   - [ ] add button to export clustershot data
-  - [ ] solve error of 'WL_max' is not defined at the startup of streamlit app
+  - [x] solve error of 'WL_max' is not defined at the startup of streamlit app
   - [x] explore caching options to speed up the whole front-end. In the current status, any changes in any slider or button in the interface will re-instantiate the whole folder, which is not bearable if the folder contains more than a few maps -- SOLVED: .clusterize() has been removed from init in class. Now only the instantiation of the class is cached and clusterize() will launch only when pressing a button in streamlit
 
 # LAST THINGS TO DO, in order
