@@ -82,8 +82,8 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
 - [x] export cluster shot data to pandas dataframe and then to a file which is loadable into Accurion's DataStudio. 
   - This should include Cy, Cx for each cluster, so that a "thickness" image can be rebuilt when the data for each cluster are fitted into the model. (this is a post-project idea, of course)
 
-- [ ] add histogram or bar-plot of pixel value distribution of raw maps for selected cluster. This would be a nice visual indication of how good or bad the selected number of clusters for the segmentation was
-- [ ] change preprocessing function used. Use transposed output to comply with the visual coordinates and not to introduce confusion on the user when comparing with the raw .png maps are displayed directly from the file explorer
+- [x] add histogram or bar-plot of pixel value distribution of raw maps for selected cluster. This would be a nice visual indication of how good or bad the selected number of clusters for the segmentation was
+- [x] change preprocessing function used. Use transposed output to comply with the visual coordinates and not to introduce confusion on the user when comparing with the raw .png maps are displayed directly from the file explorer
 
 - [x] EXPLORE FRONT-END OPTIONS WITH STREAM-LIT!!
 

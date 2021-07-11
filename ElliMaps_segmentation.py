@@ -54,8 +54,6 @@ if folderinput:
                       step=1,
                       value=5)
     
-    
-    
     #Slider to select the cluster idx to be displayed in the plots
     C_max = int(k - 1)
     C_Selector = st.sidebar.slider('Select the cluster to display',

@@ -78,7 +78,7 @@ class lambdaVarEllimaps:
     def loadAllMaps(self):
         start = time.perf_counter()
         print('Loading and preprocessing maps...')
-        AllMaps = list(map(at.loadmap_astroclean, self.AllFileList))
+        AllMaps = list(map(at.loadmap_T_astroclean, self.AllFileList))
         self.AllShuffledStack = np.dstack(AllMaps)
         self.dim1all, self.dim2all, self.dim3all = self.AllShuffledStack.shape
         self.AllShuffledStackReshaped = self.AllShuffledStack.reshape(self.dim1all*self.dim2all, self.dim3all)
@@ -182,7 +182,7 @@ class lambdaVarEllimaps:
         imDelta = self.AllShuffledStack[:,:,self.DeltaIndices[idxSelector]]
         imPsi = self.AllShuffledStack[:,:,self.PsiIndices[idxSelector]]
         
-        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(20,15))
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(25,12))
         fig.tight_layout()
         
         
@@ -217,7 +217,7 @@ class lambdaVarEllimaps:
         imDelta = self.segmentedShuffledStack[:,:,self.DeltaIndices[idxSelector]]
         imPsi = self.segmentedShuffledStack[:,:,self.PsiIndices[idxSelector]]
         
-        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(20,15))
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(25,12))
         fig.tight_layout()
         
         ax1.clear
@@ -231,7 +231,7 @@ class lambdaVarEllimaps:
                      location='left',
                      pad=0.048)
         fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector, self.WLdict[idxSelector]), 
-                     y=1.01,
+                     y=0.9,
                      fontsize='xx-large')
         ax2.clear
         arrC2 = ax2.imshow(imPsi, cmap = 'viridis')
@@ -361,6 +361,47 @@ class lambdaVarEllimaps:
         
         return fig
     
+    def plotClusterRawValues(self, C_Selector = 0, idxSelector = 0):
+        
+        C_ys, C_xs = self.cluster_coordinates[C_Selector]
+        Dmap = self.AllShuffledStack[C_ys,C_xs,self.DeltaIndices[idxSelector]]
+        Pmap = self.AllShuffledStack[C_ys,C_xs,self.PsiIndices[idxSelector]]
+        bins = int(len(Dmap)/10)
+        
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(20,10))
+        fig.tight_layout(pad=4)
+
+        ax1.clear
+        ax1.hist(Dmap, 
+                 bins = bins,
+                 color='red')
+        ax1.set_title('Not segmented Delta values on cluster {}'.format(C_Selector), 
+                      fontsize='xx-large')
+        ax1.set_xticklabels(Dmap,
+                            fontsize='xx-large')
+        ax1.xaxis.set_major_formatter(plt.FormatStrFormatter('%.2f'))
+        ax1.set_yticklabels(np.histogram(Dmap)[0],
+                            fontsize='xx-large')
+        ax1.yaxis.set_major_formatter(plt.FormatStrFormatter('%.0f'))
+        fig.suptitle('Map index: {} -- Wavelength: {} nm'.format(idxSelector,
+                                                                 self.WLdict[idxSelector]
+                                                                 ), 
+                     y = 1.05,
+                     fontsize='xx-large')
+        ax2.clear
+        ax2.hist(Pmap, 
+                 bins = bins,
+                 color='blue')
+        ax2.set_title('Not segmented Psi values on cluster {}'.format(C_Selector), 
+                      fontsize='xx-large')
+        ax2.set_xticklabels(Pmap, fontsize='xx-large')
+        ax2.xaxis.set_major_formatter(plt.FormatStrFormatter('%.0f'))
+        ax2.set_yticklabels(np.histogram(Pmap)[0],
+                            fontsize='xx-large')
+        ax2.yaxis.set_major_formatter(plt.FormatStrFormatter('%.0f'))
+        
+        return fig
+        
     def plotClusterOverMaps(self, C_Selector = 0, idxSelector = 0):
         
         Dmap = self.AllShuffledStack[:,:,self.DeltaIndices[idxSelector]]
@@ -370,38 +411,39 @@ class lambdaVarEllimaps:
         
         C_ys, C_xs = self.cluster_coordinates[C_Selector]
         
-        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2,ncols=2, figsize=(12,16))
+        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2,ncols=2, figsize=(23,15))
         fig.tight_layout(pad=3)
         
         plt.ylim(ymin=self.dim1all, ymax=0)
         plt.xlim(xmin=0, xmax=self.dim2all)
         ax1.clear
         ax1.imshow(Dmap, cmap='gray')
-        ax1.set_title('Raw Delta map')
+        ax1.set_title('Raw Delta map', fontsize='xx-large')
         ax1.scatter(C_xs, C_ys, s=5, color='pink')
         ax1.grid(False)
         ax1.set_axis_off()
         
         ax2.clear
         ax2.imshow(Pmap, cmap='gray')
-        ax2.set_title('Raw Psi map')
+        ax2.set_title('Raw Psi map', fontsize='xx-large')
         ax2.scatter(C_xs, C_ys, s=5, color='pink')
         ax2.grid(False)
         ax2.set_axis_off()
         fig.suptitle('Cluster {} at Wavelength {}, {} nm'.format(C_Selector, 
                                                                  idxSelector,
                                                                  self.WLdict[idxSelector]),
-                    y = 1)
+                    y = 1.02,
+                    fontsize='xx-large')
         ax3.clear
         ax3.grid(False)
         ax3.set_axis_off()
         ax3.imshow(DSegmap, cmap='viridis')
-        ax3.set_title('Segmented Delta map')
+        ax3.set_title('Segmented Delta map', fontsize='xx-large')
         ax3.scatter(C_xs, C_ys, s=5, color='pink')
         
         ax4.clear
         ax4.imshow(PSegmap, cmap='viridis')
-        ax4.set_title('Segmented Psi map')
+        ax4.set_title('Segmented Psi map', fontsize='xx-large')
         ax4.scatter(C_xs, C_ys, s=5, color='pink')
         ax4.grid(False)
         ax4.set_axis_off()
