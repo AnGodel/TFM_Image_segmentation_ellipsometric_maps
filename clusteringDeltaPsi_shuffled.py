@@ -182,7 +182,7 @@ class lambdaVarEllimaps:
         imDelta = self.AllShuffledStack[:,:,self.DeltaIndices[idxSelector]]
         imPsi = self.AllShuffledStack[:,:,self.PsiIndices[idxSelector]]
         
-        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,11))
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(20,15))
         fig.tight_layout()
         
         
@@ -190,6 +190,7 @@ class lambdaVarEllimaps:
         arrR1 = ax1.imshow(imDelta, cmap = 'gray')
         ax1.set_title('Delta')
         ax1.grid(b=None)
+        ax1.set_axis_off()
         fig.colorbar(arrR1, 
                      ax=ax1, 
                      shrink=0.5, 
@@ -199,6 +200,7 @@ class lambdaVarEllimaps:
         ax2.clear
         arrR2 = ax2.imshow(imPsi, cmap = 'gray')
         ax2.grid(b=None)
+        ax2.set_axis_off()
         ax2.set_title('Psi')
         fig.colorbar(arrR2, 
                      ax=ax2, 
@@ -212,13 +214,14 @@ class lambdaVarEllimaps:
         imDelta = self.segmentedShuffledStack[:,:,self.DeltaIndices[idxSelector]]
         imPsi = self.segmentedShuffledStack[:,:,self.PsiIndices[idxSelector]]
         
-        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(15,11))
+        fig, (ax1, ax2) = plt.subplots(1,2, figsize=(20,15))
         fig.tight_layout()
         
         ax1.clear
         arrC1 = ax1.imshow(imDelta, cmap = 'viridis')
         ax1.set_title('Delta')
         ax1.grid(b=None)
+        ax1.set_axis_off()
         fig.colorbar(arrC1, 
                      ax=ax1, 
                      shrink=0.5, 
@@ -228,6 +231,7 @@ class lambdaVarEllimaps:
         ax2.clear
         arrC2 = ax2.imshow(imPsi, cmap = 'viridis')
         ax2.grid(b=None)
+        ax2.set_axis_off()
         ax2.set_title('Psi')
         fig.colorbar(arrC2, 
                      ax=ax2, 
@@ -335,19 +339,21 @@ class lambdaVarEllimaps:
         ax1.set_title('Raw Delta map')
         ax1.scatter(C_xs, C_ys, s=5, color='pink')
         ax1.grid(False)
+        ax1.set_axis_off()
         
         ax2.clear
         ax2.imshow(Pmap, cmap='gray')
         ax2.set_title('Raw Psi map')
         ax2.scatter(C_xs, C_ys, s=5, color='pink')
         ax2.grid(False)
-        
+        ax2.set_axis_off()
         fig.suptitle('Cluster {} at Wavelength {}, {} nm'.format(C_Selector, 
                                                                  idxSelector,
                                                                  self.WLdict[idxSelector]),
                     y = 1)
         ax3.clear
         ax3.grid(False)
+        ax3.set_axis_off()
         ax3.imshow(DSegmap, cmap='viridis')
         ax3.set_title('Segmented Delta map')
         ax3.scatter(C_xs, C_ys, s=5, color='pink')
@@ -357,6 +363,7 @@ class lambdaVarEllimaps:
         ax4.set_title('Segmented Psi map')
         ax4.scatter(C_xs, C_ys, s=5, color='pink')
         ax4.grid(False)
+        ax4.set_axis_off()
         
         return fig
     
