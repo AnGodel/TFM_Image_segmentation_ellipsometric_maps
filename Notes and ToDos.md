@@ -83,6 +83,7 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
   - This should include Cy, Cx for each cluster, so that a "thickness" image can be rebuilt when the data for each cluster are fitted into the model. (this is a post-project idea, of course)
 
 - [ ] add histogram or bar-plot of pixel value distribution of raw maps for selected cluster. This would be a nice visual indication of how good or bad the selected number of clusters for the segmentation was
+- [ ] change preprocessing function used. Use transposed output to comply with the visual coordinates and not to introduce confusion on the user when comparing with the raw .png maps are displayed directly from the file explorer
 
 - [x] EXPLORE FRONT-END OPTIONS WITH STREAM-LIT!!
 
@@ -96,6 +97,7 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
   - [ ] add info texts at the sidebar (?) with .dat file name (experiment name), number of maps and their size, number of WL, and time taken for the preprocessing
   - [ ] add balloons or progress bar to show time consumed in the executions, specially when instantiating the class and loading the maps and when running the clustering
   - [ ] add button to export clustershot data
+  - [ ] solve error of 'WL_max' is not defined at the startup of streamlit app
   - [x] explore caching options to speed up the whole front-end. In the current status, any changes in any slider or button in the interface will re-instantiate the whole folder, which is not bearable if the folder contains more than a few maps -- SOLVED: .clusterize() has been removed from init in class. Now only the instantiation of the class is cached and clusterize() will launch only when pressing a button in streamlit
 
 # LAST THINGS TO DO, in order
