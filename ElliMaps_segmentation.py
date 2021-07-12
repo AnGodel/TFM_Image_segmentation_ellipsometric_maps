@@ -38,38 +38,46 @@ if folderinput:
         st_yellowbrick(currentExp.getEstimation2())
     else:
         pass
-    
-    
-    #@st.cache(allow_output_mutation=True)
-    def runSegmentation(exp, k):
-        expClusterized = exp.clusterize(k)
-        return expClusterized
-    k = 5
-    if st.sidebar.button('Run segmentation', on_click=runSegmentation(currentExp, k)):
-        runSegmentation(currentExp, k)
+        
     #Slider to select the number of clusters for the segmentation (k in clusterize())
-        k = st.sidebar.number_input('Select the number of clusters for the segmentation of your maps:',
-                      min_value=2,
+    k = st.sidebar.number_input('Select the number of clusters for the segmentation of your maps:',
+                      min_value=0,
                       max_value=15,
                       step=1,
-                      value=5)
+                      value=0)
+    if st.sidebar.button('Run segmentation'):
+        @st.cache(allow_output_mutation=True)
+        def runSegmentation(exp, k):
+            expClusterized = exp.clusterize(k)
+            return expClusterized
+        runSegmentation(currentExp, k)
+    else:
+        pass
     
     #Slider to select the cluster idx to be displayed in the plots
-    C_max = int(k - 1)
-    C_Selector = st.sidebar.slider('Select the cluster to display',
-                      min_value=0,
-                      max_value=C_max,
-                      value=0)
+    if k != 0:
+        
+        C_max = int(k - 1)
+        C_Selector = st.sidebar.slider('Select the cluster to display',
+                          min_value=0,
+                          max_value=C_max,
+                          value=0)
+    else:
+        pass
+    
     #Slider to select the WL idx to be displayed in the plots
     if WL_max:
         idxSelector = st.sidebar.slider('Select the WL idx to display',
                                         min_value=0,
                                         max_value=WL_max,
                                         value=0)
+    else:
+        pass
     
     #Box to select type of plot to be displayed
     plotdisplaytype = st.sidebar.selectbox('Select the plot to be displayed',
-                                           options=('Raw Delta-Psi Maps',
+                                           options=('None',
+                                                    'Raw Delta-Psi Maps',
                                                     'Segmented Delta-Psi Maps',
                                                     'Cluster over Raw and Segmented Maps'))
     
@@ -80,10 +88,18 @@ if folderinput:
         st.write(currentExp.plotSegmentedDeltaPsi(idxSelector))
     elif plotdisplaytype == 'Cluster over Raw and Segmented Maps':
         st.write(currentExp.plotClusterOverMaps(C_Selector, idxSelector))
+    else:
+        pass
     
-    #Button to display the clusters bar plot
+    #Button to display the selected cluster's bar plot
     if st.sidebar.checkbox('Show cluster bar plot'):
        st.write(currentExp.plotBarSegmentedMap(C_Selector, idxSelector))
+    else:
+        pass
+    
+    #Button to display the raw values distribution of selected cluster
+    if st.sidebar.checkbox('Show raw values histogram'):
+       st.write(currentExp.plotClusterRawValues(C_Selector, idxSelector))
     else:
         pass
     
@@ -91,7 +107,14 @@ if folderinput:
     if st.sidebar.checkbox('Show Delta-Psi curves from clustershot'):
         st.write(currentExp.plotAllShots(C_Selector))
     else:
-        pass    
+        pass
+    
+    #Button to export the clustershot data to .dat file
+    if st.sidebar.button('Export clustershot data'):
+        currentExp.exportDFs()
+        st.success('Data exported successfully to folder containing the maps')
+    else:
+        pass
 else:
     st.write('Waiting for folder path...')
     
