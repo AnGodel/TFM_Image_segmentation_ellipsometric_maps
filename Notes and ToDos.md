@@ -100,6 +100,7 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
   - [x] add button to show plot of raw values histogram
   - [x] solve error of 'WL_max' is not defined at the startup of streamlit app
   - [x] explore caching options to speed up the whole front-end. In the current status, any changes in any slider or button in the interface will re-instantiate the whole folder, which is not bearable if the folder contains more than a few maps -- SOLVED: .clusterize() has been removed from init in class. Now only the instantiation of the class is cached and clusterize() will launch only when pressing a button in streamlit
+  - [ ] finish class description??
 
 # LAST THINGS TO DO, in order
 
