@@ -94,8 +94,8 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
     - [x] idx_selector for WL
     - [x] define what happens when selected value in the slider changes
   - [x] define buttons or other kind of selector box for the image to display
-  - [ ] add info texts at the sidebar (?) with .dat file name (experiment name), number of maps and their size, number of WL, and time taken for the preprocessing
-  - [ ] add balloons or progress bar to show time consumed in the executions, specially when instantiating the class and loading the maps and when running the clustering
+  - [x] add info texts at the sidebar (?) with .dat file name (experiment name), number of maps and their size, number of WL, and ~~time taken for the preprocessing~~
+  - [ ] ~~add balloons or progress bar to show time consumed in the executions, specially when instantiating the class and loading the maps and when running the clustering~~
   - [x] add button to export clustershot data
   - [x] add button to show plot of raw values histogram
   - [x] solve error of 'WL_max' is not defined at the startup of streamlit app

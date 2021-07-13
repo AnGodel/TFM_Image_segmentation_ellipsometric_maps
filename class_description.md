@@ -24,7 +24,7 @@
   - The NaN removal will fail if there are NaN areas larger than the kernel in the raw map
   - Instantiates:
     - self.AllShuffledStack: the stack of shuffled maps
-    - self.AllShuffledStackReshaped: the reshaped stack ready for being passed to KMeans algorithm
+    - self.AllShuffledStackReshaped: the reshaped stack ready to be passed on to KMeans algorithm
     - self.dim1all, self.dim2all, self.dim3all: dimensions of the stack, being dim3 nWL*2
     - self.AllIndices: a list (np.arange) of all indices in AllShuffledStack. From 0 to dim3all-1
     - self.DeltaIndices: all even indices in self.AllIndices
@@ -56,9 +56,9 @@
 
 - self.getEstimation2()
 
-  These are the estimators from yellowbrick library. They return an internal class object called "visualizer", which cannot be displayed in streamlit. 
+  These are the estimators from yellowbrick library. They return an internal class object called "visualizer", which cannot be directly displayed in streamlit. This could be solved only using a custom library found in GitHub, "streamlit-yellowbrick" from user 'snehankekre' ([link](https://github.com/snehankekre/streamlit-yellowbrick)).
 
-  They need to be modified in order to export the visualizer as an image in .png format, which can be then displayed in streamlit
+  
 
 #### Image plotters
 
@@ -71,6 +71,7 @@
 - self.plotOneShot(C_Selector)
 - self.plotAllShots(C_Selector)
 - self.plotBarSegmentedMap(C_Selector, idxSelector)
+- self.plotClusterRawValues(C_Selector, idxSelector)
 
 #### Numeric data collection and export
 

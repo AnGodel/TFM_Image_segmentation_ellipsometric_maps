@@ -25,7 +25,11 @@ if folderinput:
         Exp = lve(folder)
         WL_max = int(Exp.WLIndices[-1])
         return Exp, WL_max
-    currentExp, WL_max = instantiate(folderinput) 
+    currentExp, WL_max = instantiate(folderinput)
+    
+    currentExpName = os.path.basename(currentExp.datFile).split('.')[0]
+    st.sidebar.success(f'{currentExp.dim3all} maps loaded successfully')
+    st.sidebar.success(f'Maps size: {currentExp.dim1all}x{currentExp.dim2all} pixels')
     
     #Box to select estimation method
     estimator = st.sidebar.selectbox('Select estimation to display',

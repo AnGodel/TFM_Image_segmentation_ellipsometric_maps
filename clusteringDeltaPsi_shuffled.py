@@ -25,26 +25,9 @@ class lambdaVarEllimaps:
             raise ValueError('Please enter a valid path to folder containing maps from lambda variation measurement')
         else:
             self.path = path
-        self.getdatFile()  # will find the .ds.dat file in the folder. #
-        # Instantiates self.datFile
-        self.readdatFile()  # reads the .dat file using pandas, intantiating:
-            #self.datatable: no further use
-            #self.WLarray: numpy array with a list of wavelengths used in the measurement
-            #self.WLIndices: list of indices of WLarray. Used later for the map index selector
-            #self.WLdict: dict with indices as keys and WL as values. For later use as reference in plots
-            #self.nWL: just for easy retrieving the number of WL (number of maps) in the measurement
-            #self.DeltaFileList: a list of file paths of the delta maps for the measurement. 
-            #self.PsiFileList: same, but for psi maps. 
-            #self.AllFileList: a list of file paths alternating delta,psi files
-            # The load function will iterate over them to create a stack of "shuffled" readable images (numpy arrays)
-        self.loadAllMaps()  # transforms raw delta maps into readable images.
-        #Also does some pre-processing, including smoothing and NaN removal by convolution of a 9x9 kernel
-        #The NaN removal will fail if there are NaN areas larger than the kernel in the raw map.
-        #Instantiates:
-            # self.AllShuffledStack: the stack of shuffled maps
-            # self.AllShuffledStackReshaped: the reshaped stack ready for being passed to KMeans algorithm
-            # self.dim1all, self.dim2all, self.dim3all: dimensions of the stack, being dim3 nWL*2
-        #self.clusterize() # runs first sementation with k=5 automatically
+        self.getdatFile()  
+        self.readdatFile()  
+        self.loadAllMaps()  
         
     def getdatFile(self):
 
@@ -105,8 +88,10 @@ class lambdaVarEllimaps:
         visualizer.show(outpath=distortionFigPath)
         stop = time.perf_counter()
         print(f'Finished estimation in {stop - start:0.4f} seconds')
-    #Having the two estimator visualizers in the same function makes the second estimator fail, somehow
         return visualizer
+    
+    #Having the two estimator visualizers in the same function makes the second estimator fail, somehow
+
     
     def getEstimation2(self, k=(2,11), metric = 'calinski_harabasz'):
         start = time.perf_counter()
@@ -242,6 +227,54 @@ class lambdaVarEllimaps:
                      ax=ax2, 
                      shrink=0.5, 
                      location='right')
+        
+        return fig
+    
+    def plotClusterOverMaps(self, C_Selector = 0, idxSelector = 0):
+        
+        Dmap = self.AllShuffledStack[:,:,self.DeltaIndices[idxSelector]]
+        Pmap = self.AllShuffledStack[:,:,self.PsiIndices[idxSelector]]
+        DSegmap = self.segmentedShuffledStack[:,:,self.DeltaIndices[idxSelector]]
+        PSegmap = self.segmentedShuffledStack[:,:,self.PsiIndices[idxSelector]]
+        
+        C_ys, C_xs = self.cluster_coordinates[C_Selector]
+        
+        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2,ncols=2, figsize=(23,15))
+        fig.tight_layout(pad=3)
+        
+        plt.ylim(ymin=self.dim1all, ymax=0)
+        plt.xlim(xmin=0, xmax=self.dim2all)
+        ax1.clear
+        ax1.imshow(Dmap, cmap='gray')
+        ax1.set_title('Raw Delta map', fontsize='xx-large')
+        ax1.scatter(C_xs, C_ys, s=5, color='pink')
+        ax1.grid(False)
+        ax1.set_axis_off()
+        
+        ax2.clear
+        ax2.imshow(Pmap, cmap='gray')
+        ax2.set_title('Raw Psi map', fontsize='xx-large')
+        ax2.scatter(C_xs, C_ys, s=5, color='pink')
+        ax2.grid(False)
+        ax2.set_axis_off()
+        fig.suptitle('Cluster {} at Wavelength {}, {} nm'.format(C_Selector, 
+                                                                 idxSelector,
+                                                                 self.WLdict[idxSelector]),
+                    y = 1.02,
+                    fontsize='xx-large')
+        ax3.clear
+        ax3.grid(False)
+        ax3.set_axis_off()
+        ax3.imshow(DSegmap, cmap='viridis')
+        ax3.set_title('Segmented Delta map', fontsize='xx-large')
+        ax3.scatter(C_xs, C_ys, s=5, color='pink')
+        
+        ax4.clear
+        ax4.imshow(PSegmap, cmap='viridis')
+        ax4.set_title('Segmented Psi map', fontsize='xx-large')
+        ax4.scatter(C_xs, C_ys, s=5, color='pink')
+        ax4.grid(False)
+        ax4.set_axis_off()
         
         return fig
     
@@ -402,54 +435,6 @@ class lambdaVarEllimaps:
         
         return fig
         
-    def plotClusterOverMaps(self, C_Selector = 0, idxSelector = 0):
-        
-        Dmap = self.AllShuffledStack[:,:,self.DeltaIndices[idxSelector]]
-        Pmap = self.AllShuffledStack[:,:,self.PsiIndices[idxSelector]]
-        DSegmap = self.segmentedShuffledStack[:,:,self.DeltaIndices[idxSelector]]
-        PSegmap = self.segmentedShuffledStack[:,:,self.PsiIndices[idxSelector]]
-        
-        C_ys, C_xs = self.cluster_coordinates[C_Selector]
-        
-        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2,ncols=2, figsize=(23,15))
-        fig.tight_layout(pad=3)
-        
-        plt.ylim(ymin=self.dim1all, ymax=0)
-        plt.xlim(xmin=0, xmax=self.dim2all)
-        ax1.clear
-        ax1.imshow(Dmap, cmap='gray')
-        ax1.set_title('Raw Delta map', fontsize='xx-large')
-        ax1.scatter(C_xs, C_ys, s=5, color='pink')
-        ax1.grid(False)
-        ax1.set_axis_off()
-        
-        ax2.clear
-        ax2.imshow(Pmap, cmap='gray')
-        ax2.set_title('Raw Psi map', fontsize='xx-large')
-        ax2.scatter(C_xs, C_ys, s=5, color='pink')
-        ax2.grid(False)
-        ax2.set_axis_off()
-        fig.suptitle('Cluster {} at Wavelength {}, {} nm'.format(C_Selector, 
-                                                                 idxSelector,
-                                                                 self.WLdict[idxSelector]),
-                    y = 1.02,
-                    fontsize='xx-large')
-        ax3.clear
-        ax3.grid(False)
-        ax3.set_axis_off()
-        ax3.imshow(DSegmap, cmap='viridis')
-        ax3.set_title('Segmented Delta map', fontsize='xx-large')
-        ax3.scatter(C_xs, C_ys, s=5, color='pink')
-        
-        ax4.clear
-        ax4.imshow(PSegmap, cmap='viridis')
-        ax4.set_title('Segmented Psi map', fontsize='xx-large')
-        ax4.scatter(C_xs, C_ys, s=5, color='pink')
-        ax4.grid(False)
-        ax4.set_axis_off()
-        
-        return fig
-    
     def createDFfromClustershot(self):
         
         df = pd.DataFrame(list(zip(self.WLIndices,self.WLarray)))
