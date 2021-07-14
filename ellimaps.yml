@@ -1,0 +1,10 @@
+name: tfm3
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - spyder
+  - scikit-learn
+  - pandas
+  - astropy
+prefix: C:\Users\Antonio\anaconda3\envs\tfm3
