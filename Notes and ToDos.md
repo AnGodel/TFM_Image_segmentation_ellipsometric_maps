@@ -104,11 +104,11 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
 
 # LAST THINGS TO DO, in order
 
-1. Test all data sets which will be linked to use the app
-2. Include small set in the repo to be used directly without downloading any extra data
-3. Check other TFMs in order to have a reference for the extension and structure of the memory
-4. Finish pending to-dos in plotting functions and other extras and details in the frontend 
-5. Create .yam file with the environment modules and dependancies and test how that will be installed in a fresh system
-6. Pack streamlit app so that it can be executed with a double-click
-7. Write memory
-8. Expand Readme.md to fit the required format
+- [x] Test all data sets which will be linked to use the app
+- [x] Include small set in the repo to be used directly without downloading any extra data
+- [ ] Check other TFMs in order to have a reference for the extension and structure of the memory
+- [x] Finish pending to-dos in plotting functions and other extras and details in the frontend 
+- [x] Create .yam file with the environment modules and dependancies and test how that will be installed in a fresh system
+- [ ] Pack streamlit app so that it can be executed with a double-click
+- [ ] Write memory
+- [ ] Expand Readme.md to fit the required format
