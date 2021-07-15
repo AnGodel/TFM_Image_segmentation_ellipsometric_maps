@@ -1,19 +1,20 @@
 # Instructions to install working environment
 
-- Make sure you have Anaconda (or Miniconda) installed in your system. 
-  - (link to anaconda install instructions)
+- Make sure you have [Anaconda](https://www.anaconda.com/products/individual) (or [Miniconda](https://docs.conda.io/en/latest/miniconda.html)) installed in your system. 
 
-- Download or clone the repo from GitHub and place it in a local folder in your computer
+- Download or clone the repo from GitHub and place it in a local folder in your computer.
 
-- Open a terminal and activate the base conda environment
+- Open a terminal and activate the base conda environment.
 
-- In the terminal, navigate to the folder where the repo is located
+- In the terminal, navigate to the folder where the repo is located:
 
   `$ cd <YOURPATHTOREPO>/TFM_Image_segmentation_ellipsometric_maps`
 
-- Build the conda environment using the provided .yml file:
+- Build the conda environment using the provided .yml file and activate it:
 
   `$ conda env create --file ellimaps_env.yml`
+
+  `$ conda activate ellimaps`
 
 - Manually install the nanofilm_package:
 
