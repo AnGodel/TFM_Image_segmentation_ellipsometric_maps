@@ -42,15 +42,25 @@ This way the fitting of segmented maps would be a good balance between the inter
 
 - Accurion's ellipsometric maps are saved as .png files which can be displayed normally in any OS with any software reading .png image format. However, the arrays of binary information contained in those images are not directly readable by any traditional image handling libraries in python. They need to be decoded into arrays of float32 numbers, which will be then mono-channel images with real delta or psi values any python library can deal with. 
 - Because of the method used to collect the data and build the ellipsometric maps, there will be empty pixels with NaN instead of a delta-psi value. This NaN pixels must be removed before the image array can be processed, as they are a no-go for many libraries and methods involving math calculations.  The values replacing the NaNs should be as similar as possible to their surrounding, in order to introduce as less noise as possible in the maps.
-- The datasets will always contain a variable number of individual maps which have either delta or psi values in their pixels. Despite these delta and psi maps should be paired, as each measured wavelength produces one delta and one psi map, there is no good a-priori way to know whether a map is delta or psi or at which wavelength they were collected. Only one measurement method includes "Delta" and "Psi" in the file naming, but for other methods the nomenclature will be different. The "metadata" relating wavelength, map type and file name is only retrievable from a .dat file which comes along the .png files.
+- The datasets will always contain a variable number of individual maps which have either delta or psi values in their pixels. Despite these delta and psi maps should be paired, as each measured wavelength produces one delta and one psi map, there is no good a-priori way to know whether a map is delta or psi or at which wavelength they were collected. Only one measurement method includes "Delta" and "Psi" in the file naming, but for other methods the nomenclature will be different. The "metadata" relating wavelengths, map types and file names is only retrievable from a single .dat file which comes along the .png files.
 
 
 
 ## Methodology
 
+Given the nature of the data, and the goal of the project, it was necessary to create a data treatment tool which is flexible enough to be used to any dataset from any sample or measurement type and maximizes the information given to the user, helping in the analysis and decision making while giving the tools to extract the meaningful data. 
 
+The chosen approach was to pack all methods for data pre-processing and then build a class which can instantiate a folder containing all .png files and one .dat files corresponding to one ellipsometry measurement. By doing so, the class will automatically pre-process all maps, making them ready for their treatment. The class will also have all necessary attributes and methods built-in, including segmentation algorithms, plotting and numeric data extraction methods. All of this will work in the background. The front-end is an interactive interface built with the *streamlit* library, in which the user just needs to enter the path to the folder containing the measurement files and start playing with the data. 
 
 ### 1. Pre-processing data
+
+After instantiating a folder path to the LambdaVarEllimaps class, it will automatically locate and read the .dat file inside using *pandas* and *os* libraries, in order to get the list of wavelengths measured, identify the files for the delta and psi maps and match them. This creates a list of files where delta and psi maps are shuffled: a delta map is always followed by its corresponding psi map for that wavelength. 
+
+
+
+
+
+
 
 ### 2. Pixelwise segmentation using KMeans
 

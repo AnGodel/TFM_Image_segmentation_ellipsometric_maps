@@ -1,4 +1,4 @@
-# Methods at '__init__' when instantiating the class
+# Methods and attributes in the *LambdaVarEllimaps* class 
 
 - self.getdatFile()   
 
