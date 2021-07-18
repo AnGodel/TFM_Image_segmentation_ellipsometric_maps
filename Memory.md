@@ -52,6 +52,8 @@ Given the nature of the data, and the goal of the project, it was necessary to c
 
 The chosen approach was to pack all methods for data pre-processing and then build a class which can instantiate a folder containing all .png files and one .dat files corresponding to one ellipsometry measurement. By doing so, the class will automatically pre-process all maps, making them ready for their treatment. The class will also have all necessary attributes and methods built-in, including segmentation algorithms, plotting and numeric data extraction methods. All of this will work in the background. The front-end is an interactive interface built with the *streamlit* library, in which the user just needs to enter the path to the folder containing the measurement files and start playing with the data. 
 
+Despite we can refer to our data as images and they can be treated like single-channel (or "gray") images in some ways, the data type data type and the need to keep the precision of the decimal part of the numbers made the use of typical image-handling libraries such as *cv2* or *scikit-image* almost impossible. The final goal is to extract some numeric data and for that out data can be handled as traditional *numpy* arrays. 
+
 ### 1. Pre-processing data
 
 After instantiating a folder path to the LambdaVarEllimaps class, it will automatically locate and read the .dat file inside using *pandas* and *os* libraries, in order to get the list of wavelengths measured, identify the files for the delta and psi maps and match them. This creates a list of files where delta and psi maps are shuffled: a delta map is always followed by its corresponding psi map for that wavelength. 
@@ -60,13 +62,19 @@ Then the load method of the class is applied iterating over the file list. This 
 
 The load method also set some important class attributes which will be used later. It piles the processed maps into a stack using numpy.dstack and then reshapes the stack to have it the right dimensions to be passed later to the clustering algorithm, storing them in two different attributes. The dimensions of this stack will be (rows, cols, nWL*2), being nWL the number of wavelengths of the instantiated measurement. These are also stored as attributes as they are used later on the code for proper indexing of some other objects. 
 
-### 2. Pixelwise segmentation using KMeans
+### 2. Pixelwise segmentation using K-Means
 
+One of the goals this project is aiming is a typical problem of unsupervised ML, being image segmentation a typical example of the use of data clustering algorithms. This have been addressed using K-Means algorithm, which is the most broadly used in image segmentation. Other clustering algorithms like DBSCAN were also tested but the results were really poor. 
 
+The application of K-Means to image segmentation is really straight forward. The image must be reshaped to (rows*cols, dim3) and pass it to the algorithm along with the number of clusters we want it to divide the pixels into, named *k*. After fitting, we it is possible to retrieve the cluster centres and the labels of the clusters elements, so that a segmented image can be rebuilt after reshaping again to the original dimensions. This is all done automatically with the class method *clusterize()* which takes only the desired *k* as argument and applies it to the reshaped image stack already stored as class attribute. For this problem we can consider our image stack as multichannel image of nWL*2 "colors". But it is necessary to access the pixel values and coordinates of each color individually after reshaping back, which conditions the data handling done after the segmentation. 
+
+The main limitation when using the K-Means algorithm is to know the optimal number of clusters into which the data can be grouped with best results and performance. This is usually done with the *Elbow* method, which helps to select the optimal number of clusters by fitting the model with a range of values for *k*. If the line chart has an inflection point (an "elbow"), it is an indication that the underlying model at this point fits best. This has been implemented using the *Yellowbrick* library, which provides a good and easy way of visualizing this clustering scoring curves and also an estimation of the processing time required for each *k* considered and finds the "elbow" which likely corresponds to the optimal value of*k*. The class methods *getEstimation()* and *getEstimation2()* will produce the *yellowbrick* visualizers using the scoring methods of distortion and Calinski-Harabasz respectively. The distortion method computes the sum of squared distances from each point to its assigned centre, while Calinski-Harabasz computes the ratio of dispersion between and within clusters. 
+
+However, the "elbow "method does not work well if the data is not very clustered or if the data values are quite similar to each other. In this cases, the result will be a quite smooth curve with an unclear inflection point. Also, the automatic finding of the "elbow" provided by *yellowbrick* is sometimes wrong, or at least counterintuitive for a human looking at the curve. Especially in the Calinski-Harabasz metric curve. Both metric visualizers have been implemented for the user to have a **help** when deciding the optimal number of clusters, but the outcome should be considered as a hint and not as a rule, as due to the nature of the data it is many times difficult to find an inflection point in the curves.
 
 ### 3. Extracting numerical data out of maps with "cluster shot"
 
-### 3. Interactive interface
+### 4. Interactive interface
 
 ## Summary
 
