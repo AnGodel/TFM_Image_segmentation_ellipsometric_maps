@@ -32,14 +32,14 @@
 
 # Clusterize method: the key point of the class
 
-- self.clusterize()  -- runs first sementation with k=5 automatically -- REMOVE FROM INIT FOR CHACHING AT STREAMLIT???
+- self.clusterize()  
   - Performs segmentation on the stack of maps. Instatiates:
   - self.cluster_list: np.arange(k). List to use to select the C_Selector
   - self.segmented
   - self.segmentedShuffledStack
   - self.cluster_centers_
   - self.cluster_labels_
-  - launches self.clustershot()
+  - calls self.clustershot()
 - self.clustershot() -- extract the coordinates of the pixels of each cluster and the numerical data (delta and psi) from each map along the third axis of self.segmentedShuffledStack. Instantiates:
   - self.firstSegmentedDeltamap -- reference used to identify position of clustered pixels. Any map could be used. First of the stack chosen randomly
   - self.delta_shot -- each row is a list of delta values from one cluster
