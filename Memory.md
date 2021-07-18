@@ -40,7 +40,7 @@ This way the fitting of segmented maps would be a good balance between the inter
 
 ## Challenges presented by ellipsometric maps
 
-- Accurion's ellipsometric maps are saved as .png files which can be displayed normally in any OS with any software reading .png image format. However, the arrays of binary information contained in those images are not directly readable by any traditional image handling libraries in python. They need to be decoded into arrays of float32 numbers, which will be then mono-channel images with real delta or psi values any python library can deal with. 
+- Accurion's ellipsometric maps are saved as .png files which can be displayed normally in any OS with any software reading .png image format. However, the arrays of binary information contained in those images are not directly readable by any traditional image handling libraries in python. They need to be decoded into readable arrays of float32 numbers, which will be then mono-channel images with real delta or psi values any python library can deal with. 
 - Because of the method used to collect the data and build the ellipsometric maps, there will be empty pixels with NaN instead of a delta-psi value. This NaN pixels must be removed before the image array can be processed, as they are a no-go for many libraries and methods involving math calculations.  The values replacing the NaNs should be as similar as possible to their surrounding, in order to introduce as less noise as possible in the maps.
 - The datasets will always contain a variable number of individual maps which have either delta or psi values in their pixels. Despite these delta and psi maps should be paired, as each measured wavelength produces one delta and one psi map, there is no good a-priori way to know whether a map is delta or psi or at which wavelength they were collected. Only one measurement method includes "Delta" and "Psi" in the file naming, but for other methods the nomenclature will be different. The "metadata" relating wavelengths, map types and file names is only retrievable from a single .dat file which comes along the .png files.
 
@@ -56,13 +56,13 @@ The chosen approach was to pack all methods for data pre-processing and then bui
 
 After instantiating a folder path to the LambdaVarEllimaps class, it will automatically locate and read the .dat file inside using *pandas* and *os* libraries, in order to get the list of wavelengths measured, identify the files for the delta and psi maps and match them. This creates a list of files where delta and psi maps are shuffled: a delta map is always followed by its corresponding psi map for that wavelength. 
 
+Then the load method of the class is applied iterating over the file list. This load method first uses the *imread* module from the *nanofilm* package, which transform the raw maps from binary to readable *numpy* arrays of float32 type. Then it uses the *astropy* library to convolve a Gaussian 9x9 kernel over the maps and replace the NaNs by the mean value of the kernel at the centre pixel. This library was chosen because of its good performance, as it is specially designed to remove bad data like the NaNs from images and being able to handle float data type. More information about how this convolution and NaN removal is applied can be found [here](https://docs.astropy.org/en/stable/api/astropy.convolution.interpolate_replace_nans.html?highlight=interpolate_replace) and [here](https://docs.astropy.org/en/stable/convolution/index.html#a-note-on-backward-compatibility-pre-v2-0). Despite the good performance of this method for removing the bad pixels, it has some limitations: if there are NaN areas in the input image larger than the kernel, the interpolation will fail or produce "outliers" introducing noise. This is more remarkable if the NaN large areas are located at the edge of the images. This is intrinsic to the method, as for those cases there is no good way of setting the boundaries for the convolve function so that it does not introduce noise in some way. For our case, it is still possible to manually change the kernel size used by the load method, but the boundary settings are left as the defaults used by *astropy's* convolve function: fill with zeros. 
 
-
-
-
-
+The load method also set some important class attributes which will be used later. It piles the processed maps into a stack using numpy.dstack and then reshapes the stack to have it the right dimensions to be passed later to the clustering algorithm, storing them in two different attributes. The dimensions of this stack will be (rows, cols, nWL*2), being nWL the number of wavelengths of the instantiated measurement. These are also stored as attributes as they are used later on the code for proper indexing of some other objects. 
 
 ### 2. Pixelwise segmentation using KMeans
+
+
 
 ### 3. Extracting numerical data out of maps with "cluster shot"
 
