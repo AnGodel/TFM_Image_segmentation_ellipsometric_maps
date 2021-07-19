@@ -74,13 +74,19 @@ However, the "elbow "method does not work well if the data is not very clustered
 
 ### 3. Extracting numerical data out of maps with "clustershot"
 
-One of the goals of the project is to extract the numerical data out of the segmented map stack to build the delta-psi vs. wavelength curves which can later be fitted using Accurion's model software. This is done with the ***clustershot()*** method, which is called automatically along with ***clusterize()***. This method picks the first map of the stack and then uses *numpy.unique* and *numpy.where* to extract the desired information (coordinates of all pixels of the cluster, delta and psi values of that cluster at each map) by iterating first over the cluster list and then over the maps of the stack with *for* loops. The data are appended to lists which are stored as the class attributes *self.delta_shot*, *self.psi_shot* and *self.cluster_coordinates*. 
+One of the goals of the project is to extract the numerical data out of the segmented map stack to build the delta-psi vs. wavelength curves which can later be fitted using Accurion's model software. This is done with the ***clustershot()*** method, which is called automatically along with ***clusterize()***. This method picks the first map of the stack and then uses *[numpy.unique](https://numpy.org/doc/stable/reference/generated/numpy.unique.html)* and *[numpy.where](https://numpy.org/doc/stable/reference/generated/numpy.where.html?highlight=where#numpy.where)* to extract the desired information (coordinates of all pixels of the cluster, delta and psi values of that cluster at each map) by iterating first over the cluster list and then over the maps of the stack with *for* loops. The data are appended to lists which are stored as the class attributes *self.delta_shot*, *self.psi_shot* and *self.cluster_coordinates*. 
 
 The delta and psi "shots" combined with the wavelength values are the data needed by the model software to find the desired parameter (thickness or optical properties of the surfaces visualized in the maps). The fitted parameter could be then combined with the cluster_coordinates to build a single image with relevant information. Currently it is not possible to communicate directly the model software with any external apps, so this can't be done automatically. But the class method ***exportDFs()*** provides a way to export the data into two .dat files, one containing the *clustershot* data and the other containing the cluster coordinates. This way the *clustershot* data can be loaded manually to the model software for the fitting and then use the cluster coordinates to build the new map after retrieving the fitted parameter from the model. 
 
 This *clustershot* method on the segmented maps comes to replace and improve with automatization the manual method which is currently available in Accurion's software: the user could load a map dataset into the software, scroll through it looking for interesting objects, manually draw one or more regions of interest (or ROIs) and then perform a so-called *pixel-shot*, which would extract the delta and psi curves by averaging all pixels inside the drawn ROIs. 
 
 <img src="https://drive.google.com/uc?export=view&id=1y2VvQXPBsrkDW8riruhO6pjDSscn-CT3" style="zoom: 80%;"/>
+
+#### Plotting data
+
+Some plotting functions have been integrated in the class in order to visualize the maps and the extracted data in a meaningful way for the user. 
+
+The image plot functions are ***self.plotDeltaPsi(idxSelector)***, ***self.plotSegmentedDeltaPsi(idxSelector)***, ***self.plotClusterOverMaps(C_Selector, idxSelector)***. They allow to visualize the raw delta and psi maps at selected wavelength, the segmented delta and psi map at selected wavelength and all pixels of a chosen cluster overlaying the raw and segmented maps at selected wavelength. The last plot can be especially useful as it allows to see where exactly the selected cluster is located in your raw map, which might not always be obvious when looking only at the raw maps.
 
 
 

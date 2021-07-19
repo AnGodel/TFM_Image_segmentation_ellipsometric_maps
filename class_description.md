@@ -30,7 +30,7 @@
     - self.DeltaIndices: all even indices in self.AllIndices
     - self.PsiIndices: all odd indices in self.AllIndices
 
-# Clusterize method: the key point of the class
+# Clusterize method
 
 - self.clusterize()  
   - Performs segmentation on the stack of maps. Instatiates:
