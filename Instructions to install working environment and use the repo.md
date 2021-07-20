@@ -1,4 +1,6 @@
-# Instructions to install working environment
+# Instructions
+
+## Install working environment
 
 - Make sure you have [Anaconda](https://www.anaconda.com/products/individual) (or [Miniconda](https://docs.conda.io/en/latest/miniconda.html)) installed in your system. 
 
@@ -28,5 +30,9 @@
 
   `$ streamlit run streamlit_ElliMaps_segmentation.py`
 
-- Download some ellipsometric maps and unzip them locally:
-  - (link or links to file downloads in dropbox)
+
+## Download ellipsometric map sets 
+
+Download some ellipsometric maps and unzip them locally:
+
+- (link or links to file downloads in dropbox)
