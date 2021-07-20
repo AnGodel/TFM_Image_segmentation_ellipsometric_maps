@@ -4,7 +4,7 @@
 
 - Make sure you have [Anaconda](https://www.anaconda.com/products/individual) (or [Miniconda](https://docs.conda.io/en/latest/miniconda.html)) installed in your system. 
 
-- Download or clone the repo from GitHub and place it in a local folder in your computer.
+- Download or clone the repo from GitHub and place it in a local folder in your computer. -- (or exectute the .bat environment installer?)
 
 - Open a terminal and activate the base conda environment.
 
@@ -35,4 +35,4 @@
 
 Download some ellipsometric maps and unzip them locally:
 
-- (link or links to file downloads in dropbox)
+- https://www.dropbox.com/s/7s3kiadxt49fdwq/example_elli-maps_forTFM.zip?dl=0
