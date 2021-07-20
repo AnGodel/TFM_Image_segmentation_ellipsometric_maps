@@ -35,4 +35,5 @@
 
 Download some ellipsometric maps and unzip them locally:
 
-- https://www.dropbox.com/s/7s3kiadxt49fdwq/example_elli-maps_forTFM.zip?dl=0
+- https://www.dropbox.com/s/7s3kiadxt49fdwq/example_elli-maps_forTFM.zip?dl=0 or alternatively
+- https://drive.google.com/file/d/1OvOFiQhxXsxIW5k2YObsLlB-FJMka9qB/view?usp=sharing
