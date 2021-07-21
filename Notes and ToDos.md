@@ -110,5 +110,5 @@ THIS HAS BEEN HANDLED BY READING THE .dat FILE TO RETRIEVE WHICH FILES ARE DELTA
 - [x] Finish pending to-dos in plotting functions and other extras and details in the frontend 
 - [x] Create .yam file with the environment modules and dependancies and test how that will be installed in a fresh system
 - [ ] Pack streamlit app so that it can be executed with a double-click
-- [ ] Write memory
+- [x] Write memory
 - [ ] Expand Readme.md to fit the required format
