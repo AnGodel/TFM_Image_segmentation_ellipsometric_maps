@@ -83,9 +83,10 @@ class lambdaVarEllimaps:
         visualizer.fit(self.AllShuffledStackReshaped)
         
         basefilename = os.path.basename(self.datFile).split('.')[0]
-        distortionFigPath = os.path.join(self.path, basefilename + '_distortionEstimation.png')
+        distortionFigPath = os.path.join(self.path, basefilename + '_distortionEstimation.jpg')
         
         visualizer.show(outpath=distortionFigPath)
+        #This should save the fig with the visualizer in the instantiated folder for its retrieval outside the front-end app
         stop = time.perf_counter()
         print(f'Finished estimation in {stop - start:0.4f} seconds')
         return visualizer
@@ -107,6 +108,7 @@ class lambdaVarEllimaps:
         calinskiFigPath = os.path.join(self.path, basefilename + '_calinskiEstimation.jpg')
         
         visualizer.show(outpath=calinskiFigPath)
+        #This should save the fig with the visualizer in the instantiated folder for its retrieval outside the front-end app
         stop = time.perf_counter()
         print(f'Finished estimation in {stop - start:0.4f} seconds')
         return visualizer
@@ -137,8 +139,8 @@ class lambdaVarEllimaps:
         #  first segmented Deltamap is used to identify position of clustered pixels. 
         #  It could be any map, as here in the shuffled stack all clusters will always overlap along the 3rd axis        
         
-        delta_shot = [] #  each row is a  cluster shot of delta values
-        psi_shot = [] #  each row is a cluster shot of psi values
+        delta_shot = [] #  each row is a  cluster shot of delta values. The list will have (n_clusters) elements
+        psi_shot = [] #  each row is a cluster shot of psi values. The list will have (n_clusters) elements
         cluster_coordinates = []
         for cluster_idx in self.cluster_list:
             
@@ -149,12 +151,12 @@ class lambdaVarEllimaps:
             P_pixelshot = [] # single cluster shot in the psi maps of the stack
 
             for ellimap in self.DeltaIndices:
-                Dpxval = np.unique(self.segmentedShuffledStack[C_ys,C_xs,ellimap])
+                Dpxval = np.unique(self.segmentedShuffledStack[C_ys,C_xs,ellimap]) # extracts the delta value of the cluster pixels in one delta map. Should be always a single value
                 D_pixelshot.append(Dpxval[0]) # the [0] here is just to append the float and not the array [float] that np.unique generates
             delta_shot.append(D_pixelshot)
             
             for ellimap in self.PsiIndices:
-                Dpxval = np.unique(self.segmentedShuffledStack[C_ys,C_xs,ellimap])
+                Dpxval = np.unique(self.segmentedShuffledStack[C_ys,C_xs,ellimap]) # extracts the psi value of the cluster pixels in one psi map. Should be always a single value
                 P_pixelshot.append(Dpxval[0]) # the [0] here is just to append the float and not the array [float] that np.unique generates
             psi_shot.append(P_pixelshot)
             
