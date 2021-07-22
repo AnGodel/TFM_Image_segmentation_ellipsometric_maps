@@ -10,25 +10,55 @@ The project has been developed using only python scripts. A python package conta
 
 ## Install working environment
 
-- Make sure you have [Anaconda](https://www.anaconda.com/products/individual) (or [Miniconda](https://docs.conda.io/en/latest/miniconda.html)) installed in your system. 
+- In Windows system:
 
-- Open a terminal and activate the base conda environment. More information on how to work with conda environments [here](https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/aio/index.html).
+  - Make sure you have [Anaconda](https://www.anaconda.com/products/individual) (or [Miniconda](https://docs.conda.io/en/latest/miniconda.html)) installed in your system. 
 
-- In the terminal, navigate to the folder where the repo is located:
+  - Open a terminal and activate the base conda environment. More information on how to work with conda environments [here](https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/aio/index.html).
 
-  `$ cd <YOURPATHTOREPO>/TFM_Image_segmentation_ellipsometric_maps`
+  - In the terminal, navigate to the folder where the repo is located:
 
-- Build the conda environment using the provided .yml file and activate it:
+    `$ cd <YOURPATHTOREPO>/TFM_Image_segmentation_ellipsometric_maps`
 
-  `$ conda env create --file ellimaps_env.yml`
+  - Build the conda environment using the provided **ellimaps_env.yml** file and activate it:
 
-  `$ conda activate ellimaps`
+    `$ conda env create --file ellimaps_env.yml`
 
-- Manually install the nanofilm_package:
+    `$ conda activate ellimaps`
 
-  `$ cd nanofilm_package_installer`
+  - Manually install the nanofilm_package:
 
-  `$ pip install nanofilm-ep4-0.7.10.tar.gz`
+    `$ cd nanofilm_package_installer`
+
+    `$ pip install nanofilm-ep4-0.7.10.tar.gz`
+
+- In Linux system: 
+
+  - Make sure you have [Anaconda](https://www.anaconda.com/products/individual) (or [Miniconda](https://docs.conda.io/en/latest/miniconda.html)) installed in your system. 
+
+  - Open a terminal and activate the base conda environment. More information on how to work with conda environments [here](https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/aio/index.html).
+
+  - In the terminal, navigate to the folder where the repo is located:
+
+    `$ cd <YOURPATHTOREPO>/TFM_Image_segmentation_ellipsometric_maps`
+
+  - Build the conda environment using the provided **ellimaps_env_linux.yml** file and activate it:
+
+    `$ conda env create --file ellimaps_env_linux.yml`
+
+    `$ conda activate ellimaps`
+
+  - Manually install the nanofilm_package:
+
+    `$ cd nanofilm_package_installer`
+
+    `$ pip install nanofilm-ep4-0.7.10.tar.gz`
+
+  - Due to some conflicts between dependencies of the environment, some error with the 'erfa' package might appear when trying to run the streamlit app. That is a dependency of the astropy library. If this happens, simply uninstall and reinstall astropy:
+
+    `$ conda uninstall astropy`
+
+    `$ conda intall astropy`
 
 ## Run streamlit app
 
