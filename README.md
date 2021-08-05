@@ -16,9 +16,7 @@ The project has been developed using only python scripts. A python package conta
 
   - Open a terminal and activate the base conda environment. More information on how to work with conda environments [here](https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/aio/index.html).
 
-  - In the terminal, navigate to the folder where the repo is located:
-
-    `$ cd <YOURPATHTOREPO>/TFM_Image_segmentation_ellipsometric_maps`
+  - Download or clone the repository in a folder in your computer.
 
   - Build the conda environment using the provided **ellimaps_env.yml** file and activate it:
 
@@ -28,9 +26,7 @@ The project has been developed using only python scripts. A python package conta
 
   - Manually install the nanofilm_package:
 
-    `$ cd nanofilm_package_installer`
-
-    `$ pip install nanofilm-ep4-0.7.10.tar.gz`
+    `$ pip install ".\nanofilm_package_installer\nanofilm-ep4-0.7.10.tar.gz"                                        `
 
 - In Linux system: 
 
@@ -38,9 +34,7 @@ The project has been developed using only python scripts. A python package conta
 
   - Open a terminal and activate the base conda environment. More information on how to work with conda environments [here](https://carpentries-incubator.github.io/introduction-to-conda-for-data-scientists/aio/index.html).
 
-  - In the terminal, navigate to the folder where the repo is located:
-
-    `$ cd <YOURPATHTOREPO>/TFM_Image_segmentation_ellipsometric_maps`
+  - Download or clone the repository in a folder in your computer.
 
   - Build the conda environment using the provided **ellimaps_env_linux.yml** file and activate it:
 
@@ -50,9 +44,7 @@ The project has been developed using only python scripts. A python package conta
 
   - Manually install the nanofilm_package:
 
-    `$ cd nanofilm_package_installer`
-
-    `$ pip install nanofilm-ep4-0.7.10.tar.gz`
+    `$ pip install "./nanofilm_package_installer/nanofilm-ep4-0.7.10.tar.gz"`
 
   - Due to some conflicts between dependencies of the environment, some error with the 'erfa' package might appear when trying to run the streamlit app. That is a dependency of the astropy library. If this happens, simply uninstall and reinstall astropy:
 
@@ -62,9 +54,7 @@ The project has been developed using only python scripts. A python package conta
 
 ## Run streamlit app
 
-- Go back to the main repo folder and run the streamlit app:
-
-  `$ cd ..`
+- Run the streamlit app:
 
   `$ streamlit run streamlit_ElliMaps_segmentation.py`
 
